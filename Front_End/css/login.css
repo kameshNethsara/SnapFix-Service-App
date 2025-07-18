@@ -106,6 +106,30 @@ html, body {
   left: 1rem;
 }
 
+.input-group select {
+  width: 100%;
+  padding: 1rem 3rem;
+  font-size: 1rem;
+  background-color: var(--gray);
+  border-radius: 0.5rem;
+  border: 0.125rem solid var(--white);
+  outline: none;
+  appearance: none; /* removes default browser dropdown arrow */
+}
+
+.input-group select:focus {
+  border: 0.125rem solid var(--primary-color);
+}
+
+.input-group select option {
+  color: var(--black);
+}
+
+.input-group i.bx-user-check {
+  left: 1rem;
+  pointer-events: none;
+}
+
 .input-group i.toggle-password {
   right: 1rem;
   left: auto;
