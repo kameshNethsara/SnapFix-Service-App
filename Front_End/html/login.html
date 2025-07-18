@@ -8,6 +8,9 @@
 
   <!-- ✅ Boxicons CDN -->
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+    <!-- ✅ Google login -->
+     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
   <div id="container" class="container">
@@ -67,6 +70,22 @@
               <i class="bx bx-show toggle-password"></i>
             </div>
             <button>Sign in</button>
+             <!-- Google Sign-In -->
+            <div id="g_id_onload"
+                data-client_id="102035465126-okcdbbrk3jrj7d48t1qotb9kfig0cm4n.apps.googleusercontent.com"
+                data-login_uri="https://localhost:8080/api/auth/google"
+                data-auto_prompt="false">
+            </div>
+
+            <div class="g_id_signin"
+                data-type="standard"
+                data-size="large"
+                data-theme="outline"
+                data-text="sign_in_with"
+                data-shape="rectangular"
+                data-logo_alignment="left">
+            </div>
+
             <p><b>Forgot password?</b></p>
             <p>
               <span>Don't have an account?</span>

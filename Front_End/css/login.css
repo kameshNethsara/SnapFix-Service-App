@@ -154,6 +154,29 @@ html, body {
   color: var(--black);
 }
 
+/* Google Sign-In Button Style */
+.g_id_signin {
+  margin-top: 1rem;
+  display: inline-block;
+  width: 100% !important;        /* full width */
+  max-width: 280px;              /* max width */
+  cursor: pointer;
+  border-radius: 0.5rem !important; /* rounded corners */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.g_id_signin:hover {
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+/* Adjust text inside button if needed */
+.g_id_signin > div {
+  font-family: 'Poppins', sans-serif !important;
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+}
+
 .form p {
   margin: 1rem 0;
   font-size: .7rem;
