@@ -15,6 +15,7 @@ public class UserDTO {
     private int userId;
     ///////////User Details//////////////
     private String userFullName;
+    private String userImgURL;
     private String userAddress;
     private String userEmail;
     private String userMobile;
@@ -22,6 +23,7 @@ public class UserDTO {
     private String userDepartment;
     private String userInfo;
     private LocalDate userWhenCreated; //date
+    private boolean status;
     ///////////User Security Details/////////////
     private String userName;
     private String userPassword;
