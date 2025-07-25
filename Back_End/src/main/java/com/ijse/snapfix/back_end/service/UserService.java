@@ -2,15 +2,42 @@ package com.ijse.snapfix.back_end.service;
 
 import com.ijse.snapfix.back_end.dto.UserDTO;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface UserService {
-    public void saveUserDetails(UserDTO userDTO);
-    public void updateUserDetails(UserDTO userDTO);
-    List<UserDTO> getAllUserDetails();
-    public void changeUserStatus(String userId);
-    public List<UserDTO> getAllUserByKeyword(String keyword); // Added search method
-    public Page<UserDTO> getAllUserWithPagination(int page, int size); // Added pagination method
 
+    // Save a new user
+    UserDTO saveUser(UserDTO userDTO);
+
+    // Update an existing user
+    UserDTO updateUser(int userId, UserDTO userDTO);
+
+    // Delete a user by ID
+    void deleteUser(int userId);
+
+    // Get user by ID
+    UserDTO getUserById(int userId);
+
+    // Get all users (with pagination)
+    Page<UserDTO> getAllUsers(Pageable pageable);
+
+    // Search users by username
+    List<UserDTO> searchUsersByUsername(String keyword);
+
+    // Search users by email
+    List<UserDTO> searchUsersByEmail(String keyword);
+
+    // Search users by mobile
+    List<UserDTO> searchUsersByMobile(String keyword);
+
+    // Search users by city
+    List<UserDTO> searchUsersByCity(String keyword);
+
+    // Activate a user
+    void activateUser(int userId);
+
+    // Deactivate a user
+    void deactivateUser(int userId);
 }
