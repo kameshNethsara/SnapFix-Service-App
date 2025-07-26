@@ -1,0 +1,79 @@
+:root {
+            --primary: #4CAF50;
+            --primary-dark: #388E3C;
+            --primary-light: #C8E6C9;
+            --primary-extra-light: #f0faf0;
+            --secondary: #FFC107;
+            --accent: #2196F3;
+            --dark: #333;
+            --light: #f8f9fa;
+            --gray: #e0e0e0;
+            --danger: #f44336;
+            --warning: #ff9800;
+            --success: #4caf50;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: #f0f5f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+/* Top bar */
+        .topbar {
+            background: white;
+            border-radius: 12px;
+            padding: 15px 20px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 25px;
+        }
+
+        .search-bar {
+            background: var(--primary-extra-light);
+            border-radius: 50px;
+            padding: 8px 20px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            padding: 5px 10px;
+            width: 100%;
+            outline: none;
+        }
+
+        .notification {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--dark);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }

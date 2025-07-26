@@ -91,6 +91,22 @@
             height: 100%;
             object-fit: cover;
         }
+        /* Logout Button */
+        .logout-btn {
+            font-weight: 500;
+            border-radius: 50px;
+            padding: 6px 15px;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            text-decoration: none;
+        }
+
+        .logout-btn:hover {
+            background-color: var(--danger);
+            color: white;
+        }
 
 
         /* Stats cards */

@@ -39,6 +39,9 @@ document.addEventListener('DOMContentLoaded', function () {
       <a href="/Front_End/html/pages/schedule.html" class="menu-item">
         <i class="fas fa-calendar-alt"></i><span>Schedule</span>
       </a>
+      <a href="/Front_End/html/pages/user-profile.html" class="menu-item">
+        <i class="fas fa-user-cog"></i><span>Profile Settings</span>
+      </a>
     </div>
   </div>
     `
