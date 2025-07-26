@@ -1,0 +1,94 @@
+:root {
+  --primary: #4CAF50;
+  --primary-dark: #388E3C;
+  --primary-light: #C8E6C9;
+  --primary-extra-light: #f0faf0;
+  --secondary: #FFC107;
+  --accent: #2196F3;
+  --dark: #333;
+  --light: #f8f9fa;
+  --gray: #e0e0e0;
+  --danger: #f44336;
+  --warning: #ff9800;
+  --success: #4caf50;
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --transition: all 0.3s ease;
+}
+
+body {
+  margin: 0;
+  background-color: #f0f5f0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--dark);
+  overflow-x: hidden;
+}
+
+/* Sidebar container */
+.sidebar {
+  width: 260px;
+  background: linear-gradient(to bottom, var(--primary-dark), var(--primary));
+  color: white;
+  height: 100vh;
+  position: fixed;
+  z-index: 100;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Fixed logo/header area */
+.sidebar-header {
+  padding: 20px 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  flex-shrink: 0;
+}
+
+/* Scrollable menu */
+.sidebar-menu {
+  padding: 20px 0;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+/* Scrollbar style (optional) */
+.sidebar-menu::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar-menu::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+/* Menu item style */
+.menu-item {
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 500;
+  border-left: 4px solid transparent;
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  margin: 5px 10px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+}
+
+.menu-item:hover,
+.menu-item.active {
+  background: rgba(255,255,255,0.1);
+  border-left: 4px solid var(--secondary);
+  color: white;
+}
+
+.menu-item i {
+  width: 24px;
+  text-align: center;
+  font-size: 18px;
+}
