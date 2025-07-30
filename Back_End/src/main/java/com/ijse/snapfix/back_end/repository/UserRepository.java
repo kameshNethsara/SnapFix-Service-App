@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
@@ -23,10 +24,15 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "UPDATE User SET status = 'Activated' WHERE user_id = ?1", nativeQuery = true)
     void activateUserStatus(String userId);
 
+
+    Optional<User> findByUserName(String username); // for authentication
+    Optional<User> findByUserEmail(String email); // for authentication
+
     List<User> findUserByUserNameContainingIgnoreCase(String keyword);
     List<User> findUserByUserEmailContainingIgnoreCase(String keyword);
     List<User> findUserByUserMobileContainingIgnoreCase(String userMobile);
     List<User> findUserByUserAddress_CityContainingIgnoreCase(String city);
     Page<User> findAll (Pageable pageable);
+
 
 }

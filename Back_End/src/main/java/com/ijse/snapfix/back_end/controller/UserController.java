@@ -17,7 +17,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("api/v1/user")
+@RequestMapping("snapfix/user")
 @RequiredArgsConstructor
 @CrossOrigin
 public class UserController {

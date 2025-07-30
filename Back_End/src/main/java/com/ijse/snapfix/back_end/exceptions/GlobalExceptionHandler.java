@@ -70,4 +70,5 @@ public class GlobalExceptionHandler {
                 null
         ), HttpStatus.METHOD_NOT_ALLOWED);
     }
+
 }

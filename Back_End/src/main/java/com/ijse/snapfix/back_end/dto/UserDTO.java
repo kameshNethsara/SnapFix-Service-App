@@ -1,5 +1,6 @@
 package com.ijse.snapfix.back_end.dto;
 
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
