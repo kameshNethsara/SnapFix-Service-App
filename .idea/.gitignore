@@ -6,3 +6,9 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+
+# Application.properties file
+/Back_End/src/main/resources/application.properties
+
+
+
