@@ -1,6 +1,5 @@
-$(document).ready(function() {
-    const topbar = ` 
-    <!-- Top Bar -->
+$(document).ready(function () {
+    const topbar = `
         <div class="topbar d-flex flex-column flex-md-row align-items-center justify-content-between">
             <div class="d-flex align-items-center mb-3 mb-md-0">
                 <button class="btn btn-primary me-3 d-md-none" id="menuToggle">
@@ -18,24 +17,46 @@ $(document).ready(function() {
                 </div>
                 <div class="d-flex align-items-center">
                     <div class="user-avatar me-2">
-                        <!-- AD -->
-                        <!-- after set img and text how show that on dashboard -->
                         <img src="/Front_End/images/user-avatar.jpg" alt="User Avatar" class="img-fluid rounded-circle" id="user-avatar-img">
                     </div>
                     <div>
-                          <a href="/Front_End/html/pages/user-profile.html">
-                            <div class="fw-semibold">Admin User</div>
-                          </a>
-                        <div class="text-muted small">Administrator</div>
+                        <a href="/Front_End/html/pages/user-profile.html">
+                            <div class="fw-semibold" id="user-name">Admin User</div>
+                        </a>
+                        <div class="text-muted small" id="user-role">Administrator</div>
                     </div>
                 </div>
-                <!-- Logout Button -->
-                <a href="/Front_End/html/login.html" class="btn btn-outline-danger ms-3 logout-btn">
+                <a class="btn btn-outline-danger ms-3 logout-btn" onclick="logout()">
                     <i class="fas fa-sign-out-alt me-1"></i>Logout
                 </a>
             </div>
         </div>
-    `
+    `;
 
     document.getElementById('topbar').innerHTML = topbar;
+
+    // ✅ Now call this AFTER topbar is injected
+    showUserDetails();
 });
+
+function showUserDetails() {
+    const userName = localStorage.getItem("username") || "Admin User";
+    const userRole = localStorage.getItem("role") || "Administrator";
+
+    const nameElement = document.getElementById("user-name");
+    if (nameElement) {
+        nameElement.textContent = userName;
+    }
+
+    const roleElement = document.getElementById("user-role");
+    if (roleElement) {
+        roleElement.textContent = userRole;
+    }
+}
+
+function logout() {
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("username");
+    localStorage.removeItem("role");
+    window.location.href = "/Front_End/html/login.html";
+}

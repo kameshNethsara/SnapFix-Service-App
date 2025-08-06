@@ -32,7 +32,7 @@ public class AuthService {
             throw new RuntimeException("Invalid password");
         }
         String token = jwtUtil.generateToken(user.getUserName());
-        return new AuthResponseDTO(token, user.getUserName());
+        return new AuthResponseDTO(token, user.getUserName(),user.getUserRole().name());
     }
 
 //    public String register(RegisterDTO registerDTO) {
