@@ -54,9 +54,13 @@ function showUserDetails() {
     }
 }
 
+// function logout() {
+//     localStorage.removeItem("jwtToken");
+//     localStorage.removeItem("username");
+//     localStorage.removeItem("role");
+//     window.location.href = "/Front_End/html/login.html";
+// }
 function logout() {
-    localStorage.removeItem("jwtToken");
-    localStorage.removeItem("username");
-    localStorage.removeItem("role");
-    window.location.href = "/Front_End/html/login.html";
+  localStorage.clear();
+  window.location.href = "/Front_End/html/login.html";
 }

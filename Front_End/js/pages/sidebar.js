@@ -46,31 +46,49 @@ document.addEventListener('DOMContentLoaded', function () {
   </div>
     `
   document.getElementById('sidebar').innerHTML = sidebar;
-  
-   // navigation logic
-  setTimeout(() => {
-    const menuItems = document.querySelectorAll('.menu-item');
-    let focusedIndex = 0;
 
-    // Highlight first by default
+  const menuItems = document.querySelectorAll('.menu-item');
+
+  // Auto-set active menu item based on current URL
+  menuItems.forEach(item => {
+    if (item.href === window.location.href) {
+      item.classList.add('active');
+    }
+  });
+
+  // Keyboard navigation (ignore when typing in inputs/textareas)
+  let focusedIndex = 0;
+
+  // Highlight first by default if none active
+  if (!document.querySelector('.menu-item.active')) {
     menuItems[focusedIndex].classList.add('keyboard-focus');
     menuItems[focusedIndex].focus();
+  } else {
+    focusedIndex = Array.from(menuItems).indexOf(document.querySelector('.menu-item.active'));
+  }
 
-    document.addEventListener('keydown', function (e) {
-      // Remove previous focus style
-      menuItems[focusedIndex].classList.remove('keyboard-focus');
+  document.addEventListener('keydown', function (e) {
+    const activeElement = document.activeElement;
+    const isTyping =
+      activeElement.tagName === 'INPUT' ||
+      activeElement.tagName === 'TEXTAREA' ||
+      activeElement.isContentEditable;
 
-      if (e.key === 'ArrowDown') {
-        focusedIndex = (focusedIndex + 1) % menuItems.length;
-      } else if (e.key === 'ArrowUp') {
-        focusedIndex = (focusedIndex - 1 + menuItems.length) % menuItems.length;
-      } else if (e.key === 'Enter') {
-        menuItems[focusedIndex].click();
-      }
+    if (isTyping) return; // Skip nav while typing
 
-      // Add focus to new item
-      menuItems[focusedIndex].classList.add('keyboard-focus');
-      menuItems[focusedIndex].focus();
-    });
-  }, 100); // wait for DOM injection
+    menuItems[focusedIndex].classList.remove('keyboard-focus');
+
+    if (e.key === 'ArrowDown') {
+      focusedIndex = (focusedIndex + 1) % menuItems.length;
+      e.preventDefault();
+    } else if (e.key === 'ArrowUp') {
+      focusedIndex = (focusedIndex - 1 + menuItems.length) % menuItems.length;
+      e.preventDefault();
+    } else if (e.key === 'Enter') {
+      menuItems[focusedIndex].click();
+    }
+
+    menuItems[focusedIndex].classList.add('keyboard-focus');
+    menuItems[focusedIndex].focus();
+  });
 });

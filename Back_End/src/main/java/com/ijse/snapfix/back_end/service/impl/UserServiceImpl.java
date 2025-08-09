@@ -1,5 +1,6 @@
 package com.ijse.snapfix.back_end.service.impl;
 
+import com.ijse.snapfix.back_end.dto.PasswordUpdateDTO;
 import com.ijse.snapfix.back_end.dto.UserDTO;
 import com.ijse.snapfix.back_end.entity.User;
 import com.ijse.snapfix.back_end.entity.UserAddress;
@@ -10,7 +11,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +24,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
 
     // Convert DTO to Entity
     private User convertToEntity(UserDTO dto) {
@@ -51,15 +55,63 @@ public class UserServiceImpl implements UserService {
         return convertToDTO(savedUser);
     }
 
+//    @Override
+//    public UserDTO updateUser(int userId, UserDTO userDTO) {
+//        User existingUser = userRepository.findById(userId)
+//                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+//
+//        User updatedUser = convertToEntity(userDTO);
+//        updatedUser.setUserId(existingUser.getUserId());
+//        User savedUser = userRepository.save(updatedUser);
+//        return convertToDTO(savedUser);
+//    }
+
     @Override
     public UserDTO updateUser(int userId, UserDTO userDTO) {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
-        User updatedUser = convertToEntity(userDTO);
-        updatedUser.setUserId(existingUser.getUserId());
-        User savedUser = userRepository.save(updatedUser);
+        // Update non-password fields manually or via mapper, but keep ID and password carefully
+        existingUser.setUserFullName(userDTO.getUserFullName());
+        existingUser.setUserEmail(userDTO.getUserEmail());
+        existingUser.setUserMobile(userDTO.getUserMobile());
+        existingUser.setUserDepartment(userDTO.getUserDepartment());
+        existingUser.setUserInfo(userDTO.getUserInfo());
+
+        // Update or set address
+        UserAddress address = existingUser.getUserAddress() != null ? existingUser.getUserAddress() : new UserAddress();
+        address.setStreet(userDTO.getStreet());
+        address.setCity(userDTO.getCity());
+        address.setPostalCode(userDTO.getPostalCode());
+        existingUser.setUserAddress(address);
+
+        // Password encode: Only update if password is provided and different from existing one
+        if (userDTO.getUserPassword() != null && !userDTO.getUserPassword().isEmpty()) {
+            // Inject PasswordEncoder in this class (add field and constructor)
+            String encodedPassword = passwordEncoder.encode(userDTO.getUserPassword());
+            existingUser.setUserPassword(encodedPassword);
+        }
+        // else: keep existing password
+
+        User savedUser = userRepository.save(existingUser);
         return convertToDTO(savedUser);
+    }
+
+    @Override
+    public void updatePassword(PasswordUpdateDTO dto) {
+        User user = userRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!passwordEncoder.matches(dto.getCurrentPassword(), user.getUserPassword())) {
+            throw new RuntimeException("Current password is incorrect");
+        }
+
+        if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
+            throw new RuntimeException("New password and confirm password do not match");
+        }
+
+        user.setUserPassword(passwordEncoder.encode(dto.getNewPassword()));
+        userRepository.save(user);
     }
 
     @Override

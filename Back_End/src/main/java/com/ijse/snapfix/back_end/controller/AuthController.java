@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "http://127.0.0.1:5500")
 public class AuthController {
     private final AuthService authService;
-    private final JwtUtil jwtUtil;
 
     @PostMapping("/register")
     @PreAuthorize("permitAll()")

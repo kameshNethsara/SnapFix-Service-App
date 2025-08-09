@@ -24,14 +24,26 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
+        System.out.println("Authorization header value: " + authHeader);
         final String jwtToken;
         final String username;
 
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
+            System.out.println("Authorization header is missing or does not start with 'Bearer '");
             return;
+        }else{
+            System.out.println("Authorization header is present and starts with 'Bearer '");
         }
         jwtToken = authHeader.substring(7);
+        if (jwtToken.isEmpty()) {
+            System.out.println("JWT token is empty after Bearer prefix");
+            filterChain.doFilter(request, response);
+            return;
+        }
+        System.out.println("Received JWT token: " + jwtToken);
+
+
         username = jwtUtil.extractUsername(jwtToken);
 
         if(username != null && SecurityContextHolder

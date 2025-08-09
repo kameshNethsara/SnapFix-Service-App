@@ -1,5 +1,6 @@
 package com.ijse.snapfix.back_end.controller;
 
+import com.ijse.snapfix.back_end.dto.PasswordUpdateDTO;
 import com.ijse.snapfix.back_end.dto.UserDTO;
 import com.ijse.snapfix.back_end.service.UserService;
 import com.ijse.snapfix.back_end.util.APIResponse;
@@ -54,6 +55,16 @@ public class UserController {
         ));
     }
 
+    @PutMapping("updatePassword")
+    public ResponseEntity<APIResponse<Void>> updatePassword(@RequestBody @Valid PasswordUpdateDTO dto) {
+        try {
+            userService.updatePassword(dto);
+            return ResponseEntity.ok(new APIResponse<>(200, "Password updated successfully!", null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new APIResponse<>(400, e.getMessage(), null));
+        }
+    }
 
     @GetMapping("get/{id}")
     public ResponseEntity<APIResponse<UserDTO>> getUserById(@PathVariable("id") int userId) {

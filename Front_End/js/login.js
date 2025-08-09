@@ -99,11 +99,29 @@ $(document).ready(function () {
           const token = results.data.accessToken;
           const username = results.data.username;
           const role = results.data.role;
+          const fullName = results.data.fullName;
+          const email = results.data.email;
+          const mobile = results.data.mobile;
+          const location = results.data.location;
+          const department = results.data.department;
+          const userWhenCreated = results.data.userWhenCreated;
+          const userInfo = results.data.userInfo;
+
+          const profileImage = results.data.userImgURL;
 
           // Store in localStorage if needed
           localStorage.setItem("jwtToken", token);
           localStorage.setItem("username", username);
           localStorage.setItem("role", role);
+          localStorage.setItem("userId", results.data.userId);
+          localStorage.setItem("fullName", fullName);
+          localStorage.setItem("email", email);
+          localStorage.setItem("mobile", mobile);
+          localStorage.setItem("location", location);
+          localStorage.setItem("department", department);
+          localStorage.setItem("userWhenCreated", userWhenCreated);
+          localStorage.setItem("userInfo", userInfo);
+          localStorage.setItem("profileImage", profileImage);
 
           Swal.fire("Login Successful!", "Welcome " + username + "!", "success").then(() => {
               window.location.href = "/Front_End/html/pages/dashboard.html";
@@ -113,5 +131,5 @@ $(document).ready(function () {
           Swal.fire("Login Failed!", error.message || "Invalid credentials", "error");
       }
   });
-
+    
 });

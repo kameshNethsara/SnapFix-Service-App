@@ -1,5 +1,6 @@
 package com.ijse.snapfix.back_end.service;
 
+import com.ijse.snapfix.back_end.dto.PasswordUpdateDTO;
 import com.ijse.snapfix.back_end.dto.UserDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,9 @@ public interface UserService {
 
     // Update an existing user
     UserDTO updateUser(int userId, UserDTO userDTO);
+
+    // Update user password
+    void updatePassword(PasswordUpdateDTO dto);
 
     // Delete a user by ID
     void deleteUser(int userId);
