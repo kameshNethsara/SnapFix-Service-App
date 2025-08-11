@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final AuthService authService;
 
+    @GetMapping("/checkUsers")
+    public long checkUsers() {
+        return authService.getUserCount(); // returns total user count in DB
+    }
+
     @PostMapping("/register")
     @PreAuthorize("permitAll()")
     public ResponseEntity<APIResponse<Object>> registerUser(@RequestBody RegisterDTO registerDTO){

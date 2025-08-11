@@ -22,6 +22,10 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
+    public long getUserCount() {
+        return userRepository.count();
+    }
+
     public AuthResponseDTO authenticate(AuthDTO authDTO) {
         User user =
                 userRepository.findByUserEmail(authDTO.getEmail())

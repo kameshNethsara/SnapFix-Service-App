@@ -85,6 +85,15 @@ public class UserServiceImpl implements UserService {
         address.setPostalCode(userDTO.getPostalCode());
         existingUser.setUserAddress(address);
 
+        //Always set status to true when updating
+        existingUser.setStatus(true);
+        // 🔹 Role-based status logic
+        if ("ADMIN".equalsIgnoreCase(userDTO.getUserRole())) {
+            existingUser.setStatus(!existingUser.isStatus()); // flip
+        } else if ("USER".equalsIgnoreCase(userDTO.getUserRole())) {
+            existingUser.setStatus(true); // always true
+        }
+
         // Password encode: Only update if password is provided and different from existing one
         if (userDTO.getUserPassword() != null && !userDTO.getUserPassword().isEmpty()) {
             // Inject PasswordEncoder in this class (add field and constructor)

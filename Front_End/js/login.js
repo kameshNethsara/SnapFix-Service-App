@@ -1,4 +1,18 @@
-$(document).ready(function () {
+$(document).ready(async function () {
+
+    let existingUserCount = 0; // store the user count globally
+
+    // 🔹 Check if there are any users in DB on page load
+    try {
+        const res = await fetch("http://localhost:8080/snapfixauth/checkUsers");
+        existingUserCount = await res.json();
+        if (existingUserCount > 0) {
+            $("#sign-up-role").val("USER").hide(); // default to USER and hide role dropdown
+            $("#sign-up-role-icon").hide(); // hide role icon
+        }
+    } catch (err) {
+        console.error("Error checking users:", err);
+    }
 
   // Toggle Sign-In / Sign-Up
   const container = $('#container');
@@ -15,55 +29,70 @@ $(document).ready(function () {
     $(this).toggleClass('bx-show bx-hide');
   });
 
-  // ==== SIGN UP ====
   $(".sign-up button").click(async function (e) {
-      e.preventDefault();
+        e.preventDefault();
 
-      const username = $("#sign-up-username").val().trim();
-      const email = $("#sign-up-email").val().trim();
-      const password = $("#sign-up-password").val();
-      const confirmPassword = $("#sign-up-confirm").val();
-      const role = $("#sign-up-role").val();
+        const username = $("#sign-up-username").val().trim();
+        const email = $("#sign-up-email").val().trim();
+        const password = $("#sign-up-password").val();
+        const confirmPassword = $("#sign-up-confirm").val();
+        let role = $("#sign-up-role").val();
+        if (!role) {
+            role = "USER"; // fallback default role
+        }
+      
+        console.log("Register Data:", { username, email, password, confirmPassword, role });
 
-      if (!username || !email || !password || !confirmPassword || !role) {
-          Swal.fire("Oops!", "Please fill all the fields!", "warning");
-          return;
-      }
+        if (!username || !email || !password || !confirmPassword || !role) {
+            Swal.fire("Oops!", "Please fill all the fields!", "warning");
+            return;
+        }
 
-      if (password !== confirmPassword) {
-          Swal.fire("Oops!", "Passwords do not match!", "error");
-          return;
-      }
+        if (password !== confirmPassword) {
+            Swal.fire("Oops!", "Passwords do not match!", "error");
+            return;
+        }
 
-      const registerData = {
-          userName: username,
-          userEmail: email,
-          userPassword: password,
-          userRole: role.toUpperCase()
-      };
+        try {
+            // Check again before sending (security fallback)
+            if (existingUserCount === 0) {
+                const checkRes = await fetch("http://localhost:8080/snapfixauth/checkUsers");
+                existingUserCount = await checkRes.json();
+            }
 
-      try {
-          const response = await fetch("http://localhost:8080/snapfixauth/register", {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json"
-              },
-              body: JSON.stringify(registerData)
-          });
+            // If users exist, force role to USER
+            if (existingUserCount > 0) {
+                role = "USER";
+            }
 
-          if (!response.ok) {
-              const err = await response.json();
-              throw new Error(err.message || "Registration failed");
-          }
+            const registerData = {
+                userName: username,
+                userEmail: email,
+                userPassword: password,
+                userRole: role.toUpperCase()
+            };
 
-          Swal.fire("Success!", "Account created successfully!", "success").then(() => {
-              toggle(); // switch to login form
-          });
+            const response = await fetch("http://localhost:8080/snapfixauth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(registerData)
+            });
 
-      } catch (error) {
-          Swal.fire("Error", error.message || "Registration failed!", "error");
-      }
-  });
+            if (!response.ok) {
+                const err = await response.json();
+                throw new Error(err.message || "Registration failed");
+            }
+
+            Swal.fire("Success!", "Account created successfully!", "success").then(() => {
+                toggle(); // switch to login form
+            });
+
+        } catch (error) {
+            Swal.fire("Error", error.message || "Registration failed!", "error");
+        }
+ });
 
   // ==== SIGN IN ====
   $(".sign-in button").click(async function (e) {
