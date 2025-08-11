@@ -34,6 +34,16 @@ body {
   box-shadow: var(--card-shadow);
   display: flex;
   flex-direction: column;
+
+  /* Slide-in effect */
+  transform: translateX(-100%);
+  animation: slideIn 0.4s ease forwards;
+}
+
+@keyframes slideIn {
+  to {
+    transform: translateX(0);
+  }
 }
 
 /* Fixed logo/header area */
@@ -78,17 +88,46 @@ body {
   margin: 5px 10px;
   border-radius: 8px;
   font-size: 1.1rem;
+  position: relative;
+  overflow: hidden;
 }
 
-.menu-item:hover,
+/* Hover fade effect */
+.menu-item:hover {
+  background: rgba(255,255,255,0.15);
+  transform: translateX(4px);
+}
+
+/* Active item smooth highlight */
 .menu-item.active {
-  background: rgba(255,255,255,0.1);
-  border-left: 4px solid var(--secondary);
   color: white;
+}
+
+.menu-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0;
+  background: rgba(255,255,255,0.15);
+  transition: width 0.3s ease;
+  z-index: 0;
+  border-radius: 8px;
+}
+
+.menu-item.active::before {
+  width: 100%;
 }
 
 .menu-item i {
   width: 24px;
   text-align: center;
   font-size: 18px;
+  z-index: 1;
+}
+
+.menu-item span {
+  position: relative;
+  z-index: 1;
 }
