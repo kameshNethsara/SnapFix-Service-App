@@ -41,7 +41,7 @@ $(document).ready(async function () {
             role = "USER"; // fallback default role
         }
       
-        console.log("Register Data:", { username, email, password, confirmPassword, role });
+        //console.log("Register Data:", { username, email, password, confirmPassword, role });
 
         if (!username || !email || !password || !confirmPassword || !role) {
             Swal.fire("Oops!", "Please fill all the fields!", "warning");
