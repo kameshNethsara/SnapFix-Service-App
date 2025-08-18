@@ -22,7 +22,7 @@
                 <!-- <div class="user-avatar mx-auto">AD</div> -->
              <!-- Avatar Upload Section -->
                 <div class="user-avatar mx-auto position-relative p-0 overflow-hidden">
-                    <img id="avatarImage" src="https://via.placeholder.com/120" alt="" class="img-fluid w-100 h-100 rounded-circle">
+                    <img id="avatarImage" src="" alt="" class="img-fluid w-100 h-100 rounded-circle">
                     <!-- Hidden File Input -->
                     <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
                     <label for="avatarUpload" id="avatarUploadPencil" class="position-absolute bottom-0 end-0 bg-white rounded-circle p-2 shadow" style="cursor: pointer;">
@@ -271,7 +271,8 @@
 
                                 <div class="mb-3">
                                     <label class="form-label" for="editUserInfo">User Info</label>
-                                    <textarea class="form-control" id="editUserInfo" rows="3" placeholder="Enter some info about yourself"></textarea>
+                                    <textarea class="form-control" id="editUserInfo" rows="3" placeholder="Enter some info about yourself" maxlength="250"></textarea>
+                                    <div id="charCount" class="form-text text-end">0 / 250</div>
                                 </div>
 
                                 <h5><i class="fas fa-map-marker-alt me-2"></i>Location Settings</h5>

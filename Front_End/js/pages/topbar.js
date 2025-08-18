@@ -42,16 +42,16 @@ $(document).ready(function () {
 function showUserDetails() {
     const userName = localStorage.getItem("username") || "Admin User";
     const userRole = localStorage.getItem("role") || "Administrator";
-
+    const userImgURL = localStorage.getItem("userImgURL") || "/Front_End/images/user-avatar.jpg";
+    
     const nameElement = document.getElementById("user-name");
-    if (nameElement) {
-        nameElement.textContent = userName;
-    }
+    if (nameElement) nameElement.textContent = userName;
 
     const roleElement = document.getElementById("user-role");
-    if (roleElement) {
-        roleElement.textContent = userRole;
-    }
+    if (roleElement) roleElement.textContent = userRole;
+
+    const avatarElement = document.getElementById("user-avatar-img");
+    if (avatarElement) avatarElement.src = userImgURL;
 }
 
 // function logout() {

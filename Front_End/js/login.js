@@ -137,6 +137,7 @@ $(document).ready(async function () {
           const userInfo = results.data.userInfo;
 
           const profileImage = results.data.userImgURL;
+          console.log("Profile Image URL:", profileImage);
 
           // Store in localStorage if needed
           localStorage.setItem("jwtToken", token);
@@ -150,12 +151,18 @@ $(document).ready(async function () {
           localStorage.setItem("department", department);
           localStorage.setItem("userWhenCreated", userWhenCreated);
           localStorage.setItem("userInfo", userInfo);
-          localStorage.setItem("profileImage", profileImage);
+          localStorage.setItem("userImgURL", profileImage || "/Front_End/images/user-avatar.jpg");
+
+
 
           Swal.fire("Login Successful!", "Welcome " + username + "!", "success").then(() => {
-              window.location.href = "/Front_End/html/pages/dashboard.html";
-          });
-
+            // if (role && role.toUpperCase() === "ADMIN") {
+            //     window.location.href = "/Front_End/html/pages/admin-dashboard.html";
+            // } else {
+            //     window.location.href = "/Front_End/html/pages/dashboard.html";
+            // }
+            window.location.href = "/Front_End/html/pages/dashboard.html";
+        });
       } catch (error) {
           Swal.fire("Login Failed!", error.message || "Invalid credentials", "error");
       }

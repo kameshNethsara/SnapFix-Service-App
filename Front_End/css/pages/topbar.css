@@ -1,28 +1,4 @@
-:root {
-            --primary: #4CAF50;
-            --primary-dark: #388E3C;
-            --primary-light: #C8E6C9;
-            --primary-extra-light: #f0faf0;
-            --secondary: #FFC107;
-            --accent: #2196F3;
-            --dark: #333;
-            --light: #f8f9fa;
-            --gray: #e0e0e0;
-            --danger: #f44336;
-            --warning: #ff9800;
-            --success: #4caf50;
-            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s ease;
-        }
-
-        body {
-            background-color: #f0f5f0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--dark);
-            overflow-x: hidden;
-        }
-/* Top bar */
-        .topbar {
+.topbar {
             background: white;
             border-radius: 12px;
             padding: 15px 20px;
@@ -40,7 +16,7 @@
             border: none;
             background: transparent;
             padding: 5px 10px;
-            width: 100%;
+            width: 100;
             outline: none;
         }
 
@@ -66,14 +42,36 @@
             justify-content: center;
         }
 
+        /* user avatar text */
         .user-avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
+            overflow: hidden;
             background: var(--primary-light);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 600;
-            color: var(--primary-dark);
+        }
+        /* user avatar image */
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        /* Logout Button */
+        .logout-btn {
+            font-weight: 500;
+            border-radius: 50px;
+            padding: 6px 15px;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            text-decoration: none;
+        }
+
+        .logout-btn:hover {
+            background-color: var(--danger);
+            color: white;
         }

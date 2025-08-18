@@ -6,6 +6,19 @@ $(document).ready(function () {
         return window.location.href = "/Front_End/html/login.html";
     }
 
+    //user info character count
+    $('#editUserInfo').on('input', function() {
+      let length = $(this).val().length;
+      $('#charCount').text(length + " / 250");
+    });
+
+    // Hide department field for regular users
+    const role = localStorage.getItem("role")?.toUpperCase();
+    if(role === "USER") {
+        $('#editDepartment').val("N/A");
+        $('#editDepartment').closest('.mb-3').hide();
+    }
+
     // Load profile data
     fetchUserProfile(userId);
     showUserDetails();
@@ -13,28 +26,43 @@ $(document).ready(function () {
     // Allow typing in input fields (force remove readonly/disabled if needed)
     enableFormInputs();
 
-    // Avatar upload preview
-    $('#avatarUpload').on('change', function () {
-        const file = this.files[0];
-        if (!file) return;
+    // Common handler for avatar/profile picture uploads
+    function handleImageUpload(inputSelector, successMessage) {
+        $(inputSelector).on('change', function () {
+            const file = this.files[0];
+            if (!file) return;
 
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            $('#avatarImage').attr('src', e.target.result);
-        };
-        reader.readAsDataURL(file);
+            const oldUrl = $('#avatarImage').attr('src'); // backup current avatar
 
-        uploadToImgBB(file)
-            .then((url) => {
-                $('#avatarImage').attr('src', url).data('url', url);
-                $('#profilePicture').data('url', url); // store it for update
-                Swal.fire('Uploaded!', 'Avatar updated successfully.', 'success');
-            })
-            .catch((err) => {
-                console.error('Image upload failed:', err);
-                Swal.fire('Upload Failed', 'Failed to upload avatar.', 'error');
-            });
-    });
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                $('#avatarImage').attr('src', e.target.result); // preview
+            };
+            reader.readAsDataURL(file);
+
+            // Upload to ImgBB
+            uploadToImgBB(file)
+                .then((url) => {
+                    $('#avatarImage').attr('src', url).data('url', url); 
+                    $('#profilePicture').data('url', url); 
+                    $('#avatarUrl').val(url); 
+                    Swal.fire('Uploaded! \n Now Click Update Profile ', successMessage, 'success').then(() => {
+                        // Switch to Settings tab after upload
+                        const settingsTab = new bootstrap.Tab(document.querySelector('a[href="#settings"]'));
+                        settingsTab.show();
+                    });
+                })
+                .catch((err) => {
+                    console.error('Image upload failed:', err);
+                    $('#avatarImage').attr('src', oldUrl); // restore old avatar
+                    Swal.fire('Upload Failed', 'Failed to upload image. Keeping previous one.', 'error');
+                });
+        });
+    }
+
+    // Attach handlers
+    handleImageUpload('#avatarUpload', 'Avatar updated successfully.');
+    handleImageUpload('#profilePicture', 'Profile picture updated successfully.');
 
     // Handle Update Profile Button Click
     $('#updateProfileBtn').on('click', updateUserProfile);
@@ -92,11 +120,12 @@ function fetchUserProfile(userId) {
 }
 
 function uploadToImgBB(file) {
+    const YOUR_IMGBB_API_KEY = "ba48954b39f744891fd598cf3b058597";
     return new Promise((resolve, reject) => {
         const formData = new FormData();
         formData.append("image", file);
 
-        fetch("https://api.imgbb.com/1/upload?key=YOUR_IMGBB_API_KEY", {
+        fetch("https://api.imgbb.com/1/upload?key="+YOUR_IMGBB_API_KEY, {
             method: "POST",
             body: formData
         })
@@ -118,12 +147,23 @@ function updateUserProfile() {
     const role = localStorage.getItem("role");
     const userWhenCreated = localStorage.getItem("userWhenCreated");
 
+    // Role eka uppercase karanna safety ekata
+    const userRole = role ? role.toUpperCase() : "";
+
+    // Edit Department hide/show logic (optional: you can do this outside the function on page load)
+    // if (userRole === "USER") {
+    //     $('#editDepartment').val("N/A");        // Department eka N/A karanna
+    //     $('#editDepartment').closest('.mb-3').hide();  // Department input eka hide karanna
+    // } else {
+    //     $('#editDepartment').closest('.mb-3').show();  // Admin nam show karanna
+    // }
+
     const updatedUser = {
         userId: parseInt(localStorage.getItem("userId")),
         userName: username,
         userRole: role,
         userWhenCreated: userWhenCreated,
-        userImgURL: $('#profilePicture').data('url') || "",
+        userImgURL: $('#profilePicture').data('url') || $('#avatarImage').data('url') || $('#avatarUrl').val() || "",
         userFullName: $('#editFullName').val(),
         userEmail: $('#editEmail').val(),
         userMobile: $('#editMobile').val(),
@@ -131,7 +171,8 @@ function updateUserProfile() {
         street: $('#editStreet').val(),
         city: $('#editCity').val(),
         postalCode: $('#editPostalCode').val(),
-        userDepartment: $('#editDepartment').val()
+        // userDepartment: $('#editDepartment').val()
+        userDepartment: userRole === "USER" ? "N/A" : $('#editDepartment').val() // User nam N/A
     };
 
     console.log("Updating user profile with data:", JSON.stringify(updatedUser));
@@ -156,6 +197,8 @@ function updateUserProfile() {
     })
     .then(data => {
         Swal.fire("Success", "Profile updated successfully!", "success");
+        $('#profilePicture').data('url', url);
+        localStorage.setItem("userImgURL", url);
         fetchUserProfile(updatedUser.userId); // Refresh UI
     })
     .catch(err => {

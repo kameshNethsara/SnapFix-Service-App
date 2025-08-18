@@ -30,7 +30,7 @@
         }
 
         /* Top bar */
-        .topbar {
+        /* .topbar {
             background: white;
             border-radius: 12px;
             padding: 15px 20px;
@@ -72,10 +72,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-        }
+        } */
 
         /* user avatar text */
-        .user-avatar {
+        /* .user-avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -84,15 +84,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-        }
+        } */
         /* user avatar image */
-        .user-avatar img {
+        /* .user-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-        }
+        } */
         /* Logout Button */
-        .logout-btn {
+        /* .logout-btn {
             font-weight: 500;
             border-radius: 50px;
             padding: 6px 15px;
@@ -106,7 +106,7 @@
         .logout-btn:hover {
             background-color: var(--danger);
             color: white;
-        }
+        } */
 
 
         /* Stats cards */
