@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,15 +15,15 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-    @Transactional
     @Modifying
-    @Query(value = "UPDATE User SET status = 'Deactivated' WHERE user_id = ?1", nativeQuery = true)
-    void deactivateUserStatus(String userId);
+    @Transactional
+    @Query("UPDATE User u SET u.status = true WHERE u.userId = :userId")
+    void activateUserStatus(@Param("userId") Integer userId);
 
-    @Transactional
     @Modifying
-    @Query(value = "UPDATE User SET status = 'Activated' WHERE user_id = ?1", nativeQuery = true)
-    void activateUserStatus(String userId);
+    @Transactional
+    @Query("UPDATE User u SET u.status = false WHERE u.userId = :userId")
+    void deactivateUserStatus(@Param("userId") Integer userId);
 
 
     Optional<User> findByUserName(String username); // for authentication

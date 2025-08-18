@@ -32,8 +32,13 @@ public class AuthService {
                 .orElseThrow(
                         () -> new RuntimeException("User not found")
                 );
+        // Check if the provided password matches the stored password
         if (!passwordEncoder.matches(authDTO.getPassword(), user.getUserPassword())) {
             throw new RuntimeException("Invalid password");
+        }
+        //status check - if user is inactive, throw error
+        if (!user.isStatus()) {
+            throw new RuntimeException("User account is inactive. Please contact administrator.");
         }
         String token = jwtUtil.generateToken(user.getUserName());
         return new AuthResponseDTO(

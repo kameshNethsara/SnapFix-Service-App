@@ -5,6 +5,7 @@ import com.ijse.snapfix.back_end.dto.UserDTO;
 import com.ijse.snapfix.back_end.entity.User;
 import com.ijse.snapfix.back_end.entity.UserAddress;
 import com.ijse.snapfix.back_end.repository.UserRepository;
+import com.ijse.snapfix.back_end.service.AuthService;
 import com.ijse.snapfix.back_end.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -25,6 +26,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
+    private final AuthService authService;
 
     // Convert DTO to Entity
     private User convertToEntity(UserDTO dto) {
@@ -51,6 +53,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO saveUser(UserDTO userDTO) {
         User user = convertToEntity(userDTO);
+        if (userDTO.getUserPassword() != null && !userDTO.getUserPassword().isEmpty()) {
+            if (!userDTO.getUserPassword().startsWith("$2a$")) { // BCrypt hash starts like this
+                user.setUserPassword(passwordEncoder.encode(userDTO.getUserPassword()));
+            } else {
+                user.setUserPassword(userDTO.getUserPassword()); // Already encoded
+            }
+        }
         User savedUser = userRepository.save(user);
         return convertToDTO(savedUser);
     }
@@ -77,6 +86,7 @@ public class UserServiceImpl implements UserService {
         existingUser.setUserMobile(userDTO.getUserMobile());
         existingUser.setUserDepartment(userDTO.getUserDepartment());
         existingUser.setUserInfo(userDTO.getUserInfo());
+        existingUser.setUserImgURL(userDTO.getUserImgURL());
 
         // Update or set address
         UserAddress address = existingUser.getUserAddress() != null ? existingUser.getUserAddress() : new UserAddress();
@@ -89,6 +99,13 @@ public class UserServiceImpl implements UserService {
         existingUser.setStatus(true);
         // 🔹 Role-based status logic
         if ("ADMIN".equalsIgnoreCase(userDTO.getUserRole())) {
+            if (authService.getUserCount() > 1) {
+                // If there are multiple users, flip the status
+                existingUser.setStatus(!existingUser.isStatus());
+            } else {
+                // If this is the only user, keep it active
+                existingUser.setStatus(true);
+            }
             existingUser.setStatus(!existingUser.isStatus()); // flip
         } else if ("USER".equalsIgnoreCase(userDTO.getUserRole())) {
             existingUser.setStatus(true); // always true
@@ -166,11 +183,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void activateUser(int userId) {
-        userRepository.activateUserStatus(String.valueOf(userId));
+        userRepository.activateUserStatus(Integer.valueOf(String.valueOf(userId)));
     }
 
     @Override
     public void deactivateUser(int userId) {
-        userRepository.deactivateUserStatus(String.valueOf(userId));
+        userRepository.deactivateUserStatus(Integer.valueOf(String.valueOf(userId)));
     }
 }
