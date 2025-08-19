@@ -196,11 +196,13 @@ function updateUserProfile() {
         return response.json();
     })
     .then(data => {
+        const url = $('#profilePicture').data('url') || $('#avatarImage').data('url') || "";
         Swal.fire("Success", "Profile updated successfully!", "success");
         $('#profilePicture').data('url', url);
         localStorage.setItem("userImgURL", url);
         fetchUserProfile(updatedUser.userId); // Refresh UI
     })
+
     .catch(err => {
         console.error("Error updating profile:", err);
         Swal.fire("Error", "Failed to update profile.", "error");
