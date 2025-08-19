@@ -44,6 +44,12 @@ $(document).ready(function () {
         $('#btnDelete').prop('disabled', false);
     });
 
+     // Row click highlight
+    $('#usersTable tbody').on('click', 'tr', function () {
+        $('#usersTable tbody tr').removeClass('selected');
+        $(this).addClass('selected');
+    });
+
     // Form submission handler
     $('#addUserForm').on('submit', function (e) {
         e.preventDefault();
@@ -345,11 +351,21 @@ async function toggleUserStatus(userId, newStatus, token) {
 
 // ===== Clear form =====
 function clearForm() {
+   // Clear all input fields
     $('#addUserForm')[0].reset();
+
+    // Hide image preview
     $('#userImgPreview').attr('src', '').css('display', 'none');
+
+    // Disable buttons
     $('#btnUpdate').prop('disabled', true);
     $('#btnDelete').prop('disabled', true);
+
+    // Clear selected user ID
     selectedUserId = null;
+
+    // Remove selected row highlight from table
+    $('#usersTable tbody tr').removeClass('selected');
 }
 
 function updateRoleCounts(table) {

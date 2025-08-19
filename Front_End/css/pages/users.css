@@ -45,8 +45,6 @@ body {
     }
 }
 
-
-
 /* ===== TYPOGRAPHY ===== */
 h1, h2, h4 {
     font-weight: 700;
@@ -59,6 +57,37 @@ h1 {
     /* border-bottom: 2px solid var(--primary-light); */
     font-size: 2rem;
 }
+
+/* ===== User Stats Section ===== */
+.user-stats {
+  margin: 20px 0;
+  text-align: center;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.user-stats .stat-item {
+  margin-bottom: 20px;
+}
+
+.user-stats .stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0d6efd; /* Bootstrap primary color */
+}
+
+.user-stats .stat-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #6c757d; /* Bootstrap secondary color */
+}
+
+/* Optional: Add hover effect */
+.user-stats .stat-item:hover {
+  transform: scale(1.05);
+  transition: all 0.3s ease;
+}
+
 
 /* ===== FORM STYLES ===== */
 #addUserForm {
@@ -249,6 +278,77 @@ h1 {
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 } */
 
+/* ===== Users Table Styling ===== */
+#usersTable {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    background: #fff;
+}
+
+/* Table Head */
+#usersTable thead {
+    background: var(--primary-dark);
+    color: #fff;
+}
+
+/* Table Cells */
+#usersTable th, 
+#usersTable td {
+    vertical-align: middle;
+    padding: 12px 15px;
+    font-size: 0.95rem;
+    border-color: var(--gray);
+}
+
+/* Hover Effect on Row */
+#usersTable tbody tr {
+    transition: var(--transition);
+}
+
+#usersTable tbody tr:hover {
+    background: var(--primary-extra-light);
+    transform: scale(1.01);
+    cursor: pointer;
+}
+
+/* Status Badges */
+.status-active {
+    background: var(--success);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status-inactive {
+    background: var(--danger);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* Action Buttons inside Table */
+.table .btn {
+    border-radius: 8px;
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    transition: var(--transition);
+}
+
+.table .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--card-shadow);
+}
+/* Row Hover Effect */
+#usersTable tbody tr:hover {
+    cursor: pointer;
+}
+
+
 .icon {
     font-size: 24px;      /* Icon size */
     transition: 0.3s;     /* Smooth hover effect */
@@ -257,7 +357,6 @@ h1 {
 .icon:hover {
     transform: scale(1.1); /* Zoom on hover */
 }
-
 
 /* Status badges */
 .status-badge {
