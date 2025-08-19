@@ -15,7 +15,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -118,6 +124,59 @@ public class UserServiceImpl implements UserService {
             existingUser.setUserPassword(encodedPassword);
         }
         // else: keep existing password
+
+        User savedUser = userRepository.save(existingUser);
+        return convertToDTO(savedUser);
+    }
+
+    public String saveFile(MultipartFile file) {
+        try {
+            String uploadDir = "uploads/images/"; // folder to save
+            File dir = new File(uploadDir);
+            if (!dir.exists()) dir.mkdirs();
+
+            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+
+            Files.copy(file.getInputStream(), Paths.get(uploadDir + fileName), StandardCopyOption.REPLACE_EXISTING);
+
+            return "/uploads/images/" + fileName; // URL or relative path
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save file: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public UserDTO updateAllFormData(int userId, UserDTO userDTO, MultipartFile profileImage) {
+        if (profileImage != null && !profileImage.isEmpty()) {
+            String fileUrl = saveFile(profileImage);
+            userDTO.setUserImgURL(fileUrl);
+        }
+
+        // Existing update logic
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+
+        existingUser.setUserFullName(userDTO.getUserFullName());
+        existingUser.setUserEmail(userDTO.getUserEmail());
+        existingUser.setUserMobile(userDTO.getUserMobile());
+        existingUser.setUserDepartment(userDTO.getUserDepartment());
+        existingUser.setUserInfo(userDTO.getUserInfo());
+        existingUser.setUserImgURL(userDTO.getUserImgURL());
+
+        UserAddress address = existingUser.getUserAddress() != null ? existingUser.getUserAddress() : new UserAddress();
+        address.setStreet(userDTO.getStreet());
+        address.setCity(userDTO.getCity());
+        address.setPostalCode(userDTO.getPostalCode());
+        existingUser.setUserAddress(address);
+
+        existingUser.setStatus(true);
+        if ("ADMIN".equalsIgnoreCase(userDTO.getUserRole()) && authService.getUserCount() > 1) {
+            existingUser.setStatus(!existingUser.isStatus());
+        }
+
+        if (userDTO.getUserPassword() != null && !userDTO.getUserPassword().isEmpty()) {
+            existingUser.setUserPassword(passwordEncoder.encode(userDTO.getUserPassword()));
+        }
 
         User savedUser = userRepository.save(existingUser);
         return convertToDTO(savedUser);

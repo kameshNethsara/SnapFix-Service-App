@@ -4,6 +4,7 @@ import com.ijse.snapfix.back_end.dto.PasswordUpdateDTO;
 import com.ijse.snapfix.back_end.dto.UserDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -14,6 +15,8 @@ public interface UserService {
 
     // Update an existing user
     UserDTO updateUser(int userId, UserDTO userDTO);
+
+    public UserDTO updateAllFormData(int userId, UserDTO userDTO, MultipartFile profileImage);
 
     // Update user password
     void updatePassword(PasswordUpdateDTO dto);

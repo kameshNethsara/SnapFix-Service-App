@@ -57,6 +57,7 @@ $(document).ready(function () {
     });
 
     // Update and Delete buttons
+    // $('#btnUpdate').on('click', () => updateUser(token, table, selectedUserId));
     $('#btnUpdate').on('click', () => updateUser(token, table, selectedUserId));
     $('#btnDelete').on('click', () => deleteUser(token, table, selectedUserId));
 
@@ -186,16 +187,41 @@ async function addUser(token, table) {
 // }
 
 // ===== Update user =====
-async function updateUser(token, table,userId) { 
-    console.log("Update function called"); // debug
+async function uploadImageToImgbb(file) {
+    const YOUR_IMGBB_API_KEY = "ba48954b39f744891fd598cf3b058597"
+    const formData = new FormData();
+    formData.append('image', file);
 
+    const res = await fetch(`https://api.imgbb.com/1/upload?key=${YOUR_IMGBB_API_KEY}`, {
+        method: 'POST',
+        body: formData
+    });
+
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error('Image upload failed');
+    return data.data.url; // This is the URL you store in DB
+}
+
+async function updateUser(token, table, userId) {
     if (!userId) {
-        console.log("No user selected for update"); // debug
         Swal.fire('Error', 'Please select a user first', 'warning');
         return;
     }
 
-    const formData = {
+    const fileInput = document.getElementById('userImg');
+
+    // Upload image to ImgBB if a file is selected
+    let imageUrl = null;
+    if (fileInput.files[0]) {
+        try {
+            imageUrl = await uploadImageToImgbb(fileInput.files[0]);
+        } catch (err) {
+            Swal.fire('Error', 'Image upload failed: ' + err.message, 'error');
+            return;
+        }
+    }
+
+    const userObj = {
         userId: userId,
         userFullName: $('#userFullName').val(),
         userEmail: $('#userEmail').val(),
@@ -205,25 +231,22 @@ async function updateUser(token, table,userId) {
         city: $('#userCity').val(),
         postalCode: $('#userPostalCode').val(),
         userDepartment: $('#userDepartment').val(),
-        userName: $('#userName').val()
+        userName: $('#userName').val(),
+        userImgURL: imageUrl // Correct field name
     };
 
-    console.log("Form data for update:", formData); // debug
 
     try {
-        const res = await fetch('http://localhost:8080/snapfix/user/update', {
+        const res = await fetch('http://localhost:8080/snapfix/user/updateAllFormData', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify(formData)
+            body: JSON.stringify(userObj)
         });
 
-        console.log("Response status:", res.status); // debug
         const data = await res.json();
-        console.log("Response data:", data); // debug
-
         if (!res.ok) throw new Error(data.message || 'Failed to update user');
 
         Swal.fire('Success', 'User Updated!', 'success');
@@ -231,7 +254,6 @@ async function updateUser(token, table,userId) {
         loadUsers(token, table);
         selectedUserId = null;
     } catch (err) {
-        console.error("Update error:", err); // debug
         Swal.fire('Error!', err.message, 'error');
     }
 }

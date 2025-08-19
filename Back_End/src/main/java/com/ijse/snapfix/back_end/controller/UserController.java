@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -54,6 +55,13 @@ public class UserController {
                 200, "User updated successfully!", updatedUser
         ));
     }
+    @PutMapping("updateAllFormData")
+    public ResponseEntity<APIResponse<UserDTO>> updateAllFormData(@RequestBody @Valid UserDTO userDTO) {
+        // Use the existing updateUser method in your service
+        UserDTO updatedUser = userService.updateUser(userDTO.getUserId(), userDTO);
+        return ResponseEntity.ok(new APIResponse<>(200, "User updated successfully!", updatedUser));
+    }
+
 
     @PutMapping("updatePassword")
     public ResponseEntity<APIResponse<Void>> updatePassword(@RequestBody @Valid PasswordUpdateDTO dto) {
