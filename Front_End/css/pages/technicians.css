@@ -1,0 +1,86 @@
+:root {
+            --primary: #4CAF50;
+            --primary-dark: #388E3C;
+            --primary-light: #C8E6C9;
+            --primary-extra-light: #f0faf0;
+            --secondary: #FFC107;
+            --accent: #2196F3;
+            --dark: #333;
+            --light: #f8f9fa;
+            --gray: #e0e0e0;
+            --danger: #f44336;
+            --warning: #ff9800;
+            --success: #4caf50;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: #f0f5f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        /* Main content */
+        .main-content {
+            margin-left: 260px;
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        #technician-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 10px;
+        }
+
+        #technician-cards .card {
+            box-shadow: var(--card-shadow);
+            border-radius: 8px;
+            transition: var(--transition);
+            background-color: var(--light);
+        }
+
+        #technician-cards .card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+        }
+
+        #technician-cards .card img {
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            height: 180px;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        #technician-cards .card-body {
+            padding: 15px;
+        }
+
+        #technician-cards .card-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        #technician-cards .badge {
+            font-size: 0.8rem;
+            padding: 0.25em 0.6em;
+        }
+
+        #technician-cards p {
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        #technician-cards i.fas.fa-star,
+        #technician-cards i.far.fa-star {
+            margin-right: 2px;
+            color: var(--secondary);
+        }
