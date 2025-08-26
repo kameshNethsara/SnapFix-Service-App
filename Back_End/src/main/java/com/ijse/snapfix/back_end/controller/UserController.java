@@ -124,6 +124,22 @@ public class UserController {
         ));
     }
 
+    @PatchMapping("activateAvailability/{id}")
+    public ResponseEntity<APIResponse<Void>> activateUserAvailability(@PathVariable("id") int userId) {
+        userService.activateUserAvailability(userId);
+        return ResponseEntity.ok(new APIResponse<>(
+                200, "User Available now!", null
+        ));
+    }
+
+    @PatchMapping("deactivateAvailability/{id}")
+    public ResponseEntity<APIResponse<Void>> deactivateUserAvailability(@PathVariable("id") int userId) {
+        userService.deactivateUserAvailability(userId);
+        return ResponseEntity.ok(new APIResponse<>(
+                200, "User not Available now!", null
+        ));
+    }
+
     @GetMapping("search/username/{keyword}")
     public ResponseEntity<APIResponse<List<UserDTO>>> searchByUsername(@PathVariable String keyword) {
         List<UserDTO> result = userService.searchUsersByUsername(keyword);

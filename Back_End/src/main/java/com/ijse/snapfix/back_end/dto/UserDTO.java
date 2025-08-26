@@ -51,6 +51,8 @@ public class UserDTO {
 
     private boolean status;
 
+    private boolean availability;
+
     ///////// User Security Details //////////
 
     @NotBlank(message = "Username is required")

@@ -17,13 +17,24 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     @Transactional
-    @Query("UPDATE User u SET u.status = true WHERE u.userId = :userId")
+    @Query("UPDATE User u SET u.status = true, u.availability = true WHERE u.userId = :userId")
     void activateUserStatus(@Param("userId") Integer userId);
 
     @Modifying
     @Transactional
-    @Query("UPDATE User u SET u.status = false WHERE u.userId = :userId")
+    @Query("UPDATE User u SET u.status = false, u.availability = false WHERE u.userId = :userId")
     void deactivateUserStatus(@Param("userId") Integer userId);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE User u SET u.availability = true WHERE u.userId = :userId")
+    void activateUserAvailability(@Param("userId") Integer userId);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE User u SET u.availability = false WHERE u.userId = :userId")
+    void deactivateUserAvailability(@Param("userId") Integer userId);
+
 
 
     Optional<User> findByUserName(String username); // for authentication

@@ -76,6 +76,10 @@ h1 {
   color: #0d6efd; /* Bootstrap primary color */
 }
 
+#totalCount{
+    color: var(--primary);
+}
+
 .user-stats .stat-label {
   font-size: 1rem;
   font-weight: 500;
@@ -299,6 +303,13 @@ h1 {
     padding: 12px 15px;
     font-size: 0.95rem;
     border-color: var(--gray);
+}
+
+.table-user-img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 /* Hover Effect on Row */

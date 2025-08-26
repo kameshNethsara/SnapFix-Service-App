@@ -73,6 +73,19 @@ $(document).ready(function () {
 
 // ===== Add new user =====
 async function addUser(token, table) {
+    const fileInput = document.getElementById('userImg');
+    let imageUrl = "/Front_End/assets/img/default-user.jpeg"; // default fallback
+
+    // Image upload if file selected
+    if (fileInput.files[0]) {
+        try {
+            imageUrl = await uploadImageToImgbb(fileInput.files[0]);
+        } catch (err) {
+            Swal.fire('Error', 'Image upload failed: ' + err.message, 'error');
+            return;
+        }
+    }
+
     const formData = {
         userFullName: $('#userFullName').val(),
         userEmail: $('#userEmail').val(),
@@ -83,7 +96,8 @@ async function addUser(token, table) {
         postalCode: $('#userPostalCode').val(),
         userDepartment: $('#userDepartment').val(),
         userName: $('#userName').val(),
-        userPassword: $('#userPassword').val()
+        userPassword: $('#userPassword').val(),
+        userImgURL: imageUrl   // <--- image ekath DB ekata yawanwa
     };
 
     try {
@@ -321,32 +335,73 @@ async function loadUsers(token, table) {
     }
 }
 
-// ===== Populate users table =====
+// Populate users table//
 function populateUsersTable(users, table, token) {
     table.clear();
 
+    const currentUserId = parseInt(localStorage.getItem("userId"));
+
     users.forEach((user, index) => {
-        const statusBadge = user.status ?
-            '<span class="badge bg-success">Active</span>' :
-            '<span class="badge bg-danger">Inactive</span>';
+        const userImage = user.userImgURL && user.userImgURL !== "" ?
+            `<img src="${user.userImgURL}" alt="User Image" class="table-user-img" />` :
+            `<img src="/Front_End/assets/img/default-user.jpeg" alt="Default Image" class="table-user-img" />`; 
+
+        const statusBadge = user.status
+            ? '<span class="badge bg-success me-1">Active</span>'
+            : '<span class="badge bg-danger me-1">Inactive</span>';
+
+        const availabilityBadge = user.availability
+            ? '<span class="badge bg-success">Available</span>'
+            : '<span class="badge bg-danger">Not Available</span>';
+
+        const isCurrentUser = user.userId === currentUserId;
+
+        const statusBtnClass = user.status ? 'btn-danger' : 'btn-success';
+        const availabilityBtnClass = user.availability ? 'btn-warning' : 'btn-primary';
+
+        // Disable status button for current user
+        const statusDisabled = isCurrentUser ? 'disabled' : '';
+
+        // Disable availability button if user is inactive OR current user
+        const availabilityDisabled = (!user.status || isCurrentUser) ? 'disabled' : '';
+
+        // Only show availability button for non-admin users
+        const showAvailabilityBtn = (user.userRole !== 'USER');
+
+        const actionButtons = `
+            <div class="d-flex gap-2">
+                <!-- Status toggle -->
+                <button class="btn btn-sm ${statusBtnClass}" 
+                    onclick="toggleUserStatus(${user.userId}, ${!user.status}, '${token}')"
+                    title="${user.status ? 'Deactivate User' : 'Activate User'}" ${statusDisabled}>
+                    <i class="fas ${user.status ? 'fa-user-slash' : 'fa-user-check'}"></i>
+                </button>
+
+                <!-- Availability toggle (only for non-admins) -->
+                ${showAvailabilityBtn ? `
+                <button class="btn btn-sm ${availabilityBtnClass}" 
+                    onclick="toggleUserAvailability(${user.userId}, ${!user.availability}, '${token}')"
+                    title="${user.availability ? 'Set Not Available' : 'Set Available'}" ${availabilityDisabled}>
+                    <i class="fas fa-clock"></i>
+                </button>
+                ` : ''}
+            </div>
+        `;
 
         table.row.add([
-            index + 1,
+            index + 1 + userImage,
             user.userFullName,
             user.userEmail,
             user.userMobile,
             user.userRole,
             user.userDepartment || 'N/A',
             user.userName,
-            statusBadge,
-            `<button class="btn btn-sm ${user.status ? 'btn-warning' : 'btn-success'}" 
-                onclick="toggleUserStatus(${user.userId}, ${!user.status}, '${token}')">
-                <i class="fas ${user.status ? 'fa-toggle-off' : 'fa-toggle-on'} icon"></i>
-            </button>`,
+            `${statusBadge} ${availabilityBadge}`,
+            actionButtons,
             user.street || '',
             user.city || '',
             user.postalCode || '',
-            user.userId // hidden column
+            user.userId
         ]);
     });
 
@@ -371,6 +426,25 @@ async function toggleUserStatus(userId, newStatus, token) {
     }
 }
 
+// ===== Toggle user availability =====
+async function toggleUserAvailability(userId, newAvailability, token) {
+    const endpoint = newAvailability ? 'activateAvailability' : 'deactivateAvailability';
+    try {
+        const res = await fetch(`http://localhost:8080/snapfix/user/${endpoint}/${userId}`, {
+            method: 'PATCH',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error(`Failed to ${newAvailability ? 'activate' : 'deactivate'} availability`);
+
+        Swal.fire('Success!', `User is now ${newAvailability ? 'Available' : 'Not Available'}`, 'success');
+        let table = $('#usersTable').DataTable();
+        loadUsers(token, table);
+    } catch (err) {
+        Swal.fire('Error!', err.message, 'error');
+    }
+}
+
+
 // ===== Clear form =====
 function clearForm() {
    // Clear all input fields
@@ -391,7 +465,7 @@ function clearForm() {
 }
 
 function updateRoleCounts(table) {
-    let adminCount = 0, techCount = 0, userCount = 0;
+    let totalCount = 0, adminCount = 0, techCount = 0, userCount = 0;
 
     table.rows().every(function () {
         const rowData = this.data();
@@ -400,8 +474,10 @@ function updateRoleCounts(table) {
         if (role === "ADMIN") adminCount++;
         else if (role === "TECHNICIAN") techCount++;
         else if (role === "USER") userCount++;
+        totalCount++;
     });
 
+    $("#totalCount").text(totalCount);
     $("#adminCount").text(adminCount);
     $("#techCount").text(techCount);
     $("#userCount").text(userCount);

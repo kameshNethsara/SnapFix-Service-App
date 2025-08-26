@@ -256,6 +256,12 @@ function updatePassword() {
 function showUserDetails() {
     const userName = localStorage.getItem("username") || "Admin User";
     const userRole = localStorage.getItem("role") || "Administrator";
+    const userImgURL = localStorage.getItem("userImgURL") || "/Front_End/assets/img/default-user.jpeg";
+
+    // Set avatar with fallback
+    $('#avatarImage').attr('src', userImgURL).on('error', function() {
+        $(this).attr('src', '/Front_End/assets/img/default-user.jpeg');
+    });
 
     $('#user-name').text(userName);
     $('#user-role').text(userRole);

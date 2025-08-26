@@ -27,8 +27,8 @@ public class User {
     private String userDepartment;
     private String userInfo;
     private LocalDate userWhenCreated; //date
-    @Lob
     private boolean status;
+    private boolean availability;
     ///////////User Security Details/////////////
     private String userName;
     private String userPassword;

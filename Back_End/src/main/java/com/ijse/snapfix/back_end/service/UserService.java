@@ -47,4 +47,10 @@ public interface UserService {
 
     // Deactivate a user
     void deactivateUser(int userId);
+
+    // Activate user availability
+    public void activateUserAvailability(int userId);
+
+    // Deactivate user availability
+    public void deactivateUserAvailability(int userId);
 }

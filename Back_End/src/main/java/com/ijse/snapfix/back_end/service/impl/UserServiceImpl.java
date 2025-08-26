@@ -66,6 +66,9 @@ public class UserServiceImpl implements UserService {
                 user.setUserPassword(userDTO.getUserPassword()); // Already encoded
             }
         }
+        // Availability set based on role
+        //user.setAvailability("Admin".equalsIgnoreCase(userDTO.getUserRole()) || "Technician".equalsIgnoreCase(userDTO.getUserRole()));
+        user.setAvailability(true); // Set availability to true for all new users
         User savedUser = userRepository.save(user);
         return convertToDTO(savedUser);
     }
@@ -86,7 +89,7 @@ public class UserServiceImpl implements UserService {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
-        // Update non-password fields manually or via mapper, but keep ID and password carefully
+        // Update non-password fields
         existingUser.setUserFullName(userDTO.getUserFullName());
         existingUser.setUserEmail(userDTO.getUserEmail());
         existingUser.setUserMobile(userDTO.getUserMobile());
@@ -101,29 +104,22 @@ public class UserServiceImpl implements UserService {
         address.setPostalCode(userDTO.getPostalCode());
         existingUser.setUserAddress(address);
 
-        //Always set status to true when updating
+        // Role-based availability logic
+        String role = userDTO.getUserRole();
+        //existingUser.setAvailability("ADMIN".equalsIgnoreCase(role) || "TECHNICIAN".equalsIgnoreCase(role));
+        existingUser.setAvailability(true); // Set all users to available
+        // Status always true for update
         existingUser.setStatus(true);
-        // 🔹 Role-based status logic
-        if ("ADMIN".equalsIgnoreCase(userDTO.getUserRole())) {
-            if (authService.getUserCount() > 1) {
-                // If there are multiple users, flip the status
-                existingUser.setStatus(!existingUser.isStatus());
-            } else {
-                // If this is the only user, keep it active
-                existingUser.setStatus(true);
-            }
-            existingUser.setStatus(!existingUser.isStatus()); // flip
-        } else if ("USER".equalsIgnoreCase(userDTO.getUserRole())) {
-            existingUser.setStatus(true); // always true
-        }
 
-        // Password encode: Only update if password is provided and different from existing one
-        if (userDTO.getUserPassword() != null && !userDTO.getUserPassword().isEmpty()) {
-            // Inject PasswordEncoder in this class (add field and constructor)
-            String encodedPassword = passwordEncoder.encode(userDTO.getUserPassword());
-            existingUser.setUserPassword(encodedPassword);
+        // Password update: encode only if not already encoded
+        String password = userDTO.getUserPassword();
+        if (password != null && !password.isEmpty()) {
+            if (!password.startsWith("$2a$")) { // BCrypt hash check
+                existingUser.setUserPassword(passwordEncoder.encode(password));
+            } else {
+                existingUser.setUserPassword(password); // Already encoded
+            }
         }
-        // else: keep existing password
 
         User savedUser = userRepository.save(existingUser);
         return convertToDTO(savedUser);
@@ -152,10 +148,10 @@ public class UserServiceImpl implements UserService {
             userDTO.setUserImgURL(fileUrl);
         }
 
-        // Existing update logic
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
+        // Update fields
         existingUser.setUserFullName(userDTO.getUserFullName());
         existingUser.setUserEmail(userDTO.getUserEmail());
         existingUser.setUserMobile(userDTO.getUserMobile());
@@ -163,19 +159,28 @@ public class UserServiceImpl implements UserService {
         existingUser.setUserInfo(userDTO.getUserInfo());
         existingUser.setUserImgURL(userDTO.getUserImgURL());
 
+        // Address update
         UserAddress address = existingUser.getUserAddress() != null ? existingUser.getUserAddress() : new UserAddress();
         address.setStreet(userDTO.getStreet());
         address.setCity(userDTO.getCity());
         address.setPostalCode(userDTO.getPostalCode());
         existingUser.setUserAddress(address);
 
+        // Role-based availability
+        String role = userDTO.getUserRole();
+        //existingUser.setAvailability("ADMIN".equalsIgnoreCase(role) || "TECHNICIAN".equalsIgnoreCase(role));
+        existingUser.setAvailability(true); // Set all users to available
+        // Status always true
         existingUser.setStatus(true);
-        if ("ADMIN".equalsIgnoreCase(userDTO.getUserRole()) && authService.getUserCount() > 1) {
-            existingUser.setStatus(!existingUser.isStatus());
-        }
 
-        if (userDTO.getUserPassword() != null && !userDTO.getUserPassword().isEmpty()) {
-            existingUser.setUserPassword(passwordEncoder.encode(userDTO.getUserPassword()));
+        // Password update (only encode if not already encoded)
+        String password = userDTO.getUserPassword();
+        if (password != null && !password.isEmpty()) {
+            if (!password.startsWith("$2a$")) {
+                existingUser.setUserPassword(passwordEncoder.encode(password));
+            } else {
+                existingUser.setUserPassword(password);
+            }
         }
 
         User savedUser = userRepository.save(existingUser);
@@ -243,10 +248,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public void activateUser(int userId) {
         userRepository.activateUserStatus(Integer.valueOf(String.valueOf(userId)));
+        //userRepository.activateUserAvailability(Integer.valueOf(String.valueOf(userId)));
     }
 
     @Override
     public void deactivateUser(int userId) {
         userRepository.deactivateUserStatus(Integer.valueOf(String.valueOf(userId)));
+        //userRepository.deactivateUserAvailability(Integer.valueOf(String.valueOf(userId)));
     }
+
+    @Override
+    public void activateUserAvailability(int userId) {
+        userRepository.activateUserAvailability(Integer.valueOf(String.valueOf(userId)));
+    }
+
+    @Override
+    public void deactivateUserAvailability(int userId) {
+        userRepository.deactivateUserAvailability(Integer.valueOf(String.valueOf(userId)));
+    }
+
+
 }
