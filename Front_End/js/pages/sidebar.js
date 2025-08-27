@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
           <a href="/Front_End/html/pages/dashboard.html" class="menu-item active">
             <i class="fas fa-home"></i><span>Dashboard</span>
           </a>
-          <a href="/Front_End/html/pages/serviceRequests.html" class="menu-item">
+          <a href="/Front_End/html/pages/service-request.html" class="menu-item">
             <i class="fas fa-tools"></i><span>Service Requests</span>
           </a>
           <a href="/Front_End/html/pages/technicians.html" class="menu-item">
@@ -60,9 +60,11 @@ document.addEventListener('DOMContentLoaded', function () {
           <a href="/Front_End/html/pages/dashboard.html" class="menu-item active">
             <i class="fas fa-home"></i><span>Dashboard</span>
           </a>
-          <a href="/Front_End/html/pages/serviceRequests.html" class="menu-item">
-            <i class="fas fa-tools"></i><span>Service Requests</span>
-          </a>
+          ${'' /* 
+              <a href="/Front_End/html/pages/serviceRequests.html" class="menu-item">
+                <i class="fas fa-tools"></i><span>Service Requests</span>
+              </a> 
+          */}
           <a href="/Front_End/html/pages/Users.html" class="menu-item">
             <i class="fas fa-user-cog"></i><span>Users</span>
           </a>

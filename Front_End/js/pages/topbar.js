@@ -17,7 +17,7 @@ $(document).ready(function () {
                 </div>
                 <div class="d-flex align-items-center">
                     <div class="user-avatar me-2">
-                        <img src="/Front_End/images/user-avatar.jpg" alt="User Avatar" class="img-fluid rounded-circle" id="user-avatar-img">
+                        <img src="/Front_End/assets/img/default-user.jpeg" alt="User Avatar" class="img-fluid rounded-circle" id="user-avatar-img">
                     </div>
                     <div>
                         <a href="/Front_End/html/pages/user-profile.html">
@@ -42,7 +42,7 @@ $(document).ready(function () {
 function showUserDetails() {
     const userName = localStorage.getItem("username") || "Admin User";
     const userRole = localStorage.getItem("role") || "Administrator";
-    const userImgURL = localStorage.getItem("userImgURL") || "/Front_End/images/user-avatar.jpg";
+    const userImgURL = localStorage.getItem("userImgURL") || "/Front_End/assets/img/default-user.jpeg";
     
     const nameElement = document.getElementById("user-name");
     if (nameElement) nameElement.textContent = userName;
@@ -52,6 +52,11 @@ function showUserDetails() {
 
     const avatarElement = document.getElementById("user-avatar-img");
     if (avatarElement) avatarElement.src = userImgURL;
+
+    // Optional: if userImgURL is empty or invalid, use default image
+    avatarElement.onerror = function() {
+        avatarElement.src = "/Front_End/assets/img/default-user.jpeg";
+    };
 }
 
 // function logout() {
@@ -61,6 +66,21 @@ function showUserDetails() {
 //     window.location.href = "/Front_End/html/login.html";
 // }
 function logout() {
-  localStorage.clear();
-  window.location.href = "/Front_End/html/login.html";
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You will be logged out!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, logout!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Clear localStorage and redirect
+            localStorage.clear();
+            window.location.href = "/Front_End/html/login.html";
+        }
+    });
 }
+
