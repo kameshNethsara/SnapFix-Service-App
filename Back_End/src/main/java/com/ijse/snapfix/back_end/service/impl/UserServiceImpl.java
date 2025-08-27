@@ -68,7 +68,18 @@ public class UserServiceImpl implements UserService {
         }
         // Availability set based on role
         //user.setAvailability("Admin".equalsIgnoreCase(userDTO.getUserRole()) || "Technician".equalsIgnoreCase(userDTO.getUserRole()));
-        user.setAvailability(true); // Set availability to true for all new users
+        //user.setAvailability(true); // Set availability to true for all new users
+
+        // Set availability from DTO, default to true if null
+        user.setAvailability(userDTO.isAvailability());
+
+        // ===== Department default =====
+        if (userDTO.getUserDepartment() == null || userDTO.getUserDepartment().isEmpty()) {
+            user.setUserDepartment("N/A");
+        } else {
+            user.setUserDepartment(userDTO.getUserDepartment());
+        }
+
         User savedUser = userRepository.save(user);
         return convertToDTO(savedUser);
     }
@@ -93,7 +104,12 @@ public class UserServiceImpl implements UserService {
         existingUser.setUserFullName(userDTO.getUserFullName());
         existingUser.setUserEmail(userDTO.getUserEmail());
         existingUser.setUserMobile(userDTO.getUserMobile());
-        existingUser.setUserDepartment(userDTO.getUserDepartment());
+        // ===== Department default logic =====
+        if (userDTO.getUserDepartment() == null || userDTO.getUserDepartment().isEmpty()) {
+            existingUser.setUserDepartment("N/A");
+        } else {
+            existingUser.setUserDepartment(userDTO.getUserDepartment());
+        }
         existingUser.setUserInfo(userDTO.getUserInfo());
         existingUser.setUserImgURL(userDTO.getUserImgURL());
 
@@ -105,9 +121,11 @@ public class UserServiceImpl implements UserService {
         existingUser.setUserAddress(address);
 
         // Role-based availability logic
-        String role = userDTO.getUserRole();
+        //String role = userDTO.getUserRole();
         //existingUser.setAvailability("ADMIN".equalsIgnoreCase(role) || "TECHNICIAN".equalsIgnoreCase(role));
-        existingUser.setAvailability(true); // Set all users to available
+        //existingUser.setAvailability(true); // Set all users to available
+        existingUser.setAvailability(userDTO.isAvailability());
+
         // Status always true for update
         existingUser.setStatus(true);
 
@@ -155,7 +173,12 @@ public class UserServiceImpl implements UserService {
         existingUser.setUserFullName(userDTO.getUserFullName());
         existingUser.setUserEmail(userDTO.getUserEmail());
         existingUser.setUserMobile(userDTO.getUserMobile());
-        existingUser.setUserDepartment(userDTO.getUserDepartment());
+        // ===== Department default logic =====
+        if (userDTO.getUserDepartment() == null || userDTO.getUserDepartment().isEmpty()) {
+            existingUser.setUserDepartment("N/A");
+        } else {
+            existingUser.setUserDepartment(userDTO.getUserDepartment());
+        }
         existingUser.setUserInfo(userDTO.getUserInfo());
         existingUser.setUserImgURL(userDTO.getUserImgURL());
 
@@ -167,9 +190,11 @@ public class UserServiceImpl implements UserService {
         existingUser.setUserAddress(address);
 
         // Role-based availability
-        String role = userDTO.getUserRole();
+        //String role = userDTO.getUserRole();
         //existingUser.setAvailability("ADMIN".equalsIgnoreCase(role) || "TECHNICIAN".equalsIgnoreCase(role));
-        existingUser.setAvailability(true); // Set all users to available
+        //existingUser.setAvailability(true); // Set all users to available
+        existingUser.setAvailability(userDTO.isAvailability());
+
         // Status always true
         existingUser.setStatus(true);
 
@@ -223,6 +248,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> searchUsersByUsername(String keyword) {
+        return userRepository.findUserByUserNameContainingIgnoreCase(keyword)
+                .stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserDTO> searchUsersByName(String keyword) {
         return userRepository.findUserByUserNameContainingIgnoreCase(keyword)
                 .stream().map(this::convertToDTO).collect(Collectors.toList());
     }

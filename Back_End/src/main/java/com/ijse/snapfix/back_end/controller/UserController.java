@@ -148,6 +148,14 @@ public class UserController {
         ));
     }
 
+    @GetMapping("search/name/{keyword}")
+    public ResponseEntity<APIResponse<List<UserDTO>>> searchByName(@PathVariable String keyword) {
+        List<UserDTO> result = userService.searchUsersByName(keyword);
+        return ResponseEntity.ok(new APIResponse<>(
+                200, "Search by name successful!", result
+        ));
+    }
+
     @GetMapping("search/email/{keyword}")
     public ResponseEntity<APIResponse<List<UserDTO>>> searchByEmail(@PathVariable String keyword) {
         List<UserDTO> result = userService.searchUsersByEmail(keyword);

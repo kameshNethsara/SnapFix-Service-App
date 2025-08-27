@@ -33,6 +33,9 @@ public interface UserService {
     // Search users by username
     List<UserDTO> searchUsersByUsername(String keyword);
 
+    // Search users by name
+    List<UserDTO> searchUsersByName(String keyword);
+
     // Search users by email
     List<UserDTO> searchUsersByEmail(String keyword);
 

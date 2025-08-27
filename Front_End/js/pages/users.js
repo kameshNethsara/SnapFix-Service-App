@@ -1,34 +1,65 @@
 let selectedUserId = null;
+
 $(document).ready(function () {
     const token = localStorage.getItem("jwtToken");
 
-    // Initialize DataTable only once and hide columns
+    // ===== Dynamic Departments =====
+    const departments = [
+        "AC", "Plumbing", "Electrical", "Carpentry", "Painting",
+        "Cleaning", "Networking", "Appliance Repair", "HVAC",
+        "Masonry", "Roofing", "Pest Control", "ICT", "Hardware"
+    ];
+
+    const departmentSelect = $('#userDepartment');
+    departmentSelect.empty().append('<option value="" disabled selected>Select department</option>');
+    departments.forEach(d => {
+        departmentSelect.append(`<option value="${d}">${d}</option>`);
+    });
+
+    // ===== Initialize DataTable =====
     let table = $('#usersTable').DataTable({
         columnDefs: [
             { targets: [9, 10, 11, 12], visible: false } // hide street, city, postalCode, userId
         ]
     });
 
-    // Image preview handler
+    // ===== Image preview =====
     $('#userImg').on('change', function (event) {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = function (e) {
-                $('#userImgPreview')
-                    .attr('src', e.target.result)
-                    .css('display', 'block');
+                $('#userImgPreview').attr('src', e.target.result).css('display', 'block');
             };
             reader.readAsDataURL(file);
         }
     });
 
-    // Row click handler
+    // ===== Role change handler =====
+    $('#userRole').on('change', function () {
+        const role = $(this).val();
+        const departmentSelect = $('#userDepartment');
+
+        if (role === 'USER') {
+            departmentSelect.val('N/A');              // set value to N/A
+            departmentSelect.prop('disabled', true); // disable dropdown
+        } else {
+            departmentSelect.prop('disabled', false); // enable dropdown
+            if (departmentSelect.val() === 'N/A') {
+                departmentSelect.val(''); // reset to default if previously N/A
+            }
+        }
+    });
+
+    // ===== Row click =====
     $('#usersTable tbody').on('click', 'tr', function () {
+        $('#usersTable tbody tr').removeClass('selected');
+        $(this).addClass('selected');
+
         let data = table.row(this).data();
         if (!data) return;
 
-        selectedUserId = data[12]; // hidden userId column
+        selectedUserId = data[12]; // hidden userId
 
         $('#userFullName').val(data[1]);
         $('#userEmail').val(data[2]);
@@ -36,39 +67,33 @@ $(document).ready(function () {
         $('#userRole').val(data[4]);
         $('#userDepartment').val(data[5]);
         $('#userName').val(data[6]);
-        $('#userStreet').val(data[9]);     
-        $('#userCity').val(data[10]);         
-        $('#userPostalCode').val(data[11]); 
+        $('#userStreet').val(data[9]);
+        $('#userCity').val(data[10]);
+        $('#userPostalCode').val(data[11]);
+
+        // ===== adjust department based on role =====
+        $('#userRole').trigger('change');
 
         $('#btnUpdate').prop('disabled', false);
         $('#btnDelete').prop('disabled', false);
     });
 
-     // Row click highlight
-    $('#usersTable tbody').on('click', 'tr', function () {
-        $('#usersTable tbody tr').removeClass('selected');
-        $(this).addClass('selected');
-    });
-
-    // Form submission handler
+    // ===== Form submit =====
     $('#addUserForm').on('submit', function (e) {
         e.preventDefault();
         addUser(token, table);
     });
 
-    // Update and Delete buttons
-    // $('#btnUpdate').on('click', () => updateUser(token, table, selectedUserId));
+    // ===== Update/Delete buttons =====
     $('#btnUpdate').on('click', () => updateUser(token, table, selectedUserId));
     $('#btnDelete').on('click', () => deleteUser(token, table, selectedUserId));
 
-    // Load initial user data
+    // ===== Load Users =====
     loadUsers(token, table);
-    
-    // after fetching users or on table draw
+
     table.on('draw', function () {
         updateRoleCounts(table);
     });
-
 });
 
 // ===== Add new user =====
@@ -452,6 +477,8 @@ function clearForm() {
 
     // Hide image preview
     $('#userImgPreview').attr('src', '').css('display', 'none');
+    // Reset department dropdown
+     $('#userDepartment').prop('disabled', false);
 
     // Disable buttons
     $('#btnUpdate').prop('disabled', true);
