@@ -2,6 +2,7 @@ package com.ijse.snapfix.back_end.service.impl;
 
 import com.ijse.snapfix.back_end.dto.PasswordUpdateDTO;
 import com.ijse.snapfix.back_end.dto.UserDTO;
+import com.ijse.snapfix.back_end.dto.UserLocationDTO;
 import com.ijse.snapfix.back_end.entity.User;
 import com.ijse.snapfix.back_end.entity.UserAddress;
 import com.ijse.snapfix.back_end.repository.UserRepository;
@@ -120,11 +121,25 @@ public class UserServiceImpl implements UserService {
         address.setPostalCode(userDTO.getPostalCode());
         existingUser.setUserAddress(address);
 
+        // Update live location if provided
+        if(userDTO.getLatitude() != null) {
+            existingUser.setLatitude(userDTO.getLatitude());
+        }
+        if(userDTO.getLongitude() != null) {
+            existingUser.setLongitude(userDTO.getLongitude());
+        }
+
         // Role-based availability logic
         //String role = userDTO.getUserRole();
         //existingUser.setAvailability("ADMIN".equalsIgnoreCase(role) || "TECHNICIAN".equalsIgnoreCase(role));
         //existingUser.setAvailability(true); // Set all users to available
-        existingUser.setAvailability(userDTO.isAvailability());
+        //existingUser.setAvailability(userDTO.isAvailability());
+        if (userDTO.getUserRole() != null) {
+            existingUser.setAvailability(true); // keep current
+        } else {
+            existingUser.setAvailability(userDTO.isAvailability());
+        }
+
 
         // Status always true for update
         existingUser.setStatus(true);
@@ -159,6 +174,17 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    public UserDTO updateUserLocation(UserLocationDTO dto) {
+        User existingUser = userRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if(dto.getLatitude() != null) existingUser.setLatitude(dto.getLatitude());
+        if(dto.getLongitude() != null) existingUser.setLongitude(dto.getLongitude());
+
+        User savedUser = userRepository.save(existingUser);
+        return convertToDTO(savedUser);
+    }
+
     @Override
     public UserDTO updateAllFormData(int userId, UserDTO userDTO, MultipartFile profileImage) {
         if (profileImage != null && !profileImage.isEmpty()) {
@@ -189,11 +215,24 @@ public class UserServiceImpl implements UserService {
         address.setPostalCode(userDTO.getPostalCode());
         existingUser.setUserAddress(address);
 
+        // Update live location if provided
+        if(userDTO.getLatitude() != null) {
+            existingUser.setLatitude(userDTO.getLatitude());
+        }
+        if(userDTO.getLongitude() != null) {
+            existingUser.setLongitude(userDTO.getLongitude());
+        }
+
         // Role-based availability
         //String role = userDTO.getUserRole();
         //existingUser.setAvailability("ADMIN".equalsIgnoreCase(role) || "TECHNICIAN".equalsIgnoreCase(role));
         //existingUser.setAvailability(true); // Set all users to available
-        existingUser.setAvailability(userDTO.isAvailability());
+        if (userDTO.getUserRole() != null) {
+            existingUser.setAvailability(true); // keep current
+        } else {
+            existingUser.setAvailability(userDTO.isAvailability());
+        }
+
 
         // Status always true
         existingUser.setStatus(true);
@@ -274,6 +313,11 @@ public class UserServiceImpl implements UserService {
     public List<UserDTO> searchUsersByCity(String keyword) {
         return userRepository.findUserByUserAddress_CityContainingIgnoreCase(keyword)
                 .stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+    public UserDTO getUserLocationById(int userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return modelMapper.map(user, UserDTO.class);
     }
 
     @Override

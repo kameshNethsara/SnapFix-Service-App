@@ -15,22 +15,32 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
+
     ///////////User Details//////////////
     private String userFullName;
     private String userImgURL;
+
     @Embedded
     private UserAddress userAddress;
+
     private String userEmail;
     private String userMobile;
+
     @Enumerated(EnumType.STRING)
     private Role userRole;
+
     private String userDepartment;
     private String userInfo;
-    private LocalDate userWhenCreated; //date
+    private LocalDate userWhenCreated;
     private boolean status;
     private boolean availability;
+
     ///////////User Security Details/////////////
     private String userName;
     private String userPassword;
+
+    ///////////Live Location/////////////
+    private Double latitude;
+    private Double longitude;
 
 }

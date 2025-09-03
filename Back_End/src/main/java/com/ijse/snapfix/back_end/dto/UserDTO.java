@@ -60,4 +60,9 @@ public class UserDTO {
 
     @Size(min = 6, message = "Password must be at least 6 characters")
     private String userPassword;
+
+    //live location
+    private Double latitude;
+    private Double longitude;
+
 }

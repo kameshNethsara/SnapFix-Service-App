@@ -2,6 +2,7 @@ package com.ijse.snapfix.back_end.controller;
 
 import com.ijse.snapfix.back_end.dto.PasswordUpdateDTO;
 import com.ijse.snapfix.back_end.dto.UserDTO;
+import com.ijse.snapfix.back_end.dto.UserLocationDTO;
 import com.ijse.snapfix.back_end.service.UserService;
 import com.ijse.snapfix.back_end.util.APIResponse;
 import jakarta.validation.Valid;
@@ -61,8 +62,11 @@ public class UserController {
         UserDTO updatedUser = userService.updateUser(userDTO.getUserId(), userDTO);
         return ResponseEntity.ok(new APIResponse<>(200, "User updated successfully!", updatedUser));
     }
-
-
+    @PutMapping("updateLocation")
+    public ResponseEntity<APIResponse<UserDTO>> updateUserLocation(@RequestBody UserLocationDTO dto) {
+        UserDTO updatedUser = userService.updateUserLocation(dto); // service method
+        return ResponseEntity.ok(new APIResponse<>(200, "User location updated successfully!", updatedUser));
+    }
     @PutMapping("updatePassword")
     public ResponseEntity<APIResponse<Void>> updatePassword(@RequestBody @Valid PasswordUpdateDTO dto) {
         try {

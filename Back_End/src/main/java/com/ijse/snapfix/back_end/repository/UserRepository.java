@@ -35,7 +35,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("UPDATE User u SET u.availability = false WHERE u.userId = :userId")
     void deactivateUserAvailability(@Param("userId") Integer userId);
 
-
+    @Query("SELECT u FROM User u WHERE u.userRole = 'TECHNICIAN' AND u.availability = true")
+    List<User> findAvailableTechnicians();
 
     Optional<User> findByUserName(String username); // for authentication
     Optional<User> findByUserEmail(String email); // for authentication
