@@ -1,146 +1,235 @@
 $(document).ready(function() {
-  const apiUrl = "http://localhost:8080/snapfix/user/getall";
-  const token = localStorage.getItem("jwtToken"); // JWT token
+    const apiUrl = "http://localhost:8080/snapfix/user/getall";
+    const token = localStorage.getItem("jwtToken"); 
 
-  // Load all technicians
-  async function loadTechnicians() {
-    const container = $("#technician-cards");
-    container.empty();
+    let technicians = [];
 
-    try {
-      const res = await fetch(apiUrl, {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
+    // ============================
+    // Load all technicians
+    // ============================
+    async function loadTechnicians() {
+        const container = $("#technician-cards");
+        container.html('<div class="loading-spinner"><div class="spinner"></div></div>');
+
+        try {
+            const res = await fetch(apiUrl, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+            const response = await res.json();
+
+            const users = Array.isArray(response.data) ? response.data : [];
+            technicians = users.filter(user => user.userRole?.toUpperCase() === "TECHNICIAN");
+
+            renderTechnicianCards(technicians);
+
+        } catch (err) {
+            console.error("Error loading technicians:", err);
+            container.html(`
+                <div class="no-results">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <h3>Failed to load technicians</h3>
+                    <p>Please check your connection and try again</p>
+                </div>
+            `);
         }
-      });
+    }
 
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-      const response = await res.json();
-
-      const users = Array.isArray(response.data) ? response.data : [];
-      const technicians = users.filter(user => user.userRole?.toUpperCase() === "TECHNICIAN");
-      // const technicians = users.filter(user => user.userRole && user.userRole.toUpperCase() === "USER");
-
-      if (technicians.length === 0) {
-        container.html("<p>No technicians found.</p>");
+    // ============================
+    // Render technician cards
+    // ============================
+    function renderTechnicianCards(techArray) {
+    const container = $("#technician-cards");
+    if (techArray.length === 0) {
+        container.html(`
+            <div class="no-results">
+                <i class="fas fa-user-times"></i>
+                <h3>No technicians found</h3>
+                <p>Try adjusting your search or filters</p>
+            </div>
+        `);
         return;
-      }
+    }
 
-      technicians.forEach(tech => {
+    let html = '';
+    techArray.forEach(tech => {
         const rating = tech.rating || 0;
         let starsHtml = "";
         for (let j = 1; j <= 5; j++) {
-          starsHtml += j <= rating 
-            ? `<i class="fas fa-star text-warning"></i>` 
-            : `<i class="far fa-star text-warning"></i>`;
+            starsHtml += j <= rating 
+                ? `<i class="fas fa-star text-warning"></i>` 
+                : `<i class="far fa-star text-warning"></i>`;
         }
 
-        const isAvailable = tech.available === true || tech.available === "true";
-        const availabilityBadge = isAvailable
-          ? `<span class="badge bg-success">Available</span>`
-          : `<span class="badge bg-danger">Unavailable</span>`;
+        const isAvailable = tech.availability === true || tech.availability === "true";
+        const imageURL = tech.userImgURL || '/Front_End/assets/img/default-user.jpeg';
 
-        const requestButton = isAvailable
-          ? `<button class="btn btn-primary btn-sm request-btn" data-id="${tech.userId}">Request</button>`
-          : `<button class="btn btn-secondary btn-sm" disabled>Not Available</button>`;
-
-        const imageURL = tech.userImgURL || '/Front_End/images/default-tech.jpg';
-
-        const cardHtml = `
-          <div class="col-md-4 mb-4">
-            <div class="card shadow-sm">
-              <img 
-                src="${imageURL}" 
-                class="card-img-top" 
-                alt="${tech.userFullName}" 
-                onerror="this.src='/Front_End/images/default-tech.jpg'"
-              >
-              <div class="card-body">
-                <h5 class="card-title">${tech.userFullName} ${availabilityBadge}</h5>
-                <p>${starsHtml}</p>
-                <p><i class="fas fa-phone"></i> ${tech.userMobile}</p>
-                <p><i class="fas fa-map-marker-alt"></i> ${tech.city}</p>
-                <p>${tech.description || ''}</p>
-                ${requestButton}
-              </div>
+        html += `
+        <div class="col">
+            <div class="technician-card">
+                <div class="card-img-container">
+                    <img 
+                        src="${imageURL}" 
+                        alt="${tech.userFullName}"
+                        onerror="this.src='/Front_End/assets/img/default-user.jpeg'"
+                    >
+                    <span class="status-badge ${isAvailable ? 'status-available' : 'status-offline'}">
+                        ${isAvailable ? 'Available' : 'Unavailable'}
+                    </span>
+                </div>
+                <div class="card-body">
+                    <h5 class="technician-name">${tech.userFullName}</h5>
+                    <div class="rating">${starsHtml} <span class="ms-1">(${rating.toFixed(1)})</span></div>
+                    <p class="info-item"><i class="fas fa-phone"></i> ${tech.userMobile || 'N/A'}</p>
+                    <p class="info-item"><i class="fas fa-envelope"></i> ${tech.userEmail || 'Email not provided'}</p>
+                    <p class="info-item"><i class="fas fa-building"></i> ${tech.userDepartment || 'No department assigned'}</p>
+                    <p class="info-item"><i class="fas fa-map-marker-alt"></i> ${tech.city || 'Location not specified'}</p>
+                    <p>${tech.userInfo || 'No description provided.'}</p>
+                    <button class="request-btn" ${isAvailable ? '' : 'disabled'} data-id="${tech.userId}">
+                        ${isAvailable ? 'Request Service' : 'Not Available'}
+                    </button>
+                </div>
             </div>
-          </div>
+        </div>
         `;
-        container.append(cardHtml);
-      });
+    });
 
-      $(".request-btn").off("click").on("click", function() {
-        const techId = $(this).data("id");
-        Swal.fire({
-          title: "Confirm Request",
-          text: `Send request to technician ID: ${techId}?`,
-          icon: "question",
-          showCancelButton: true,
-          confirmButtonText: "Yes, send request",
-        }).then((result) => {
-          if (result.isConfirmed) sendRequestToTechnician(techId);
+    container.html(html);
+
+        // ============================
+        // Request button click
+        // ============================
+        $(".request-btn:not(:disabled)").on("click", function() {
+            const techId = $(this).data("id");
+            const techName = $(this).closest('.technician-card').find('.technician-name').text();
+
+            Swal.fire({
+                title: "Confirm Request",
+                html: `Send service request to <strong>${techName}</strong>?`,
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Yes, send request",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                 if (result.isConfirmed) {
+                    sendRequestToTechnician(techId, techName);
+
+                    // After sending the request, redirect to the service-request page
+                    window.location.href = "/Front_End/html/pages/service-request.html";
+                }
+            });
         });
-      });
-
-    } catch (err) {
-      console.error("Error loading technicians:", err);
-      container.html("<p>Failed to load technicians.</p>");
     }
-  }
 
-  // Send service request to technician
-  async function sendRequestToTechnician(techId) {
-    try {
-      const res = await fetch(`http://localhost:8080/snapfix/requests/send/${techId}`, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
+    // ============================
+    // Filter & search functionality
+    // ============================
+    function setupFiltering() {
+        $('#searchInput, #availabilityFilter, #sortSelect').on('change keyup', function() {
+            const searchText = $('#searchInput').val().toLowerCase();
+            const availabilityFilter = $('#availabilityFilter').val();
+            const sortBy = $('#sortSelect').val();
+
+            let filteredTechs = technicians.filter(tech => {
+                const matchesSearch = tech.userFullName.toLowerCase().includes(searchText) || 
+                    (tech.userInfo && tech.userInfo.toLowerCase().includes(searchText)) ||
+                    (tech.city && tech.city.toLowerCase().includes(searchText));
+
+                const matchesAvailability = availabilityFilter === 'all' ? true :
+                    (tech.availability === true || tech.availability === "true");
+
+                return matchesSearch && matchesAvailability;
+            });
+
+            if (sortBy === 'rating') {
+                filteredTechs.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+            } else if (sortBy === 'name') {
+                filteredTechs.sort((a, b) => a.userFullName.localeCompare(b.userFullName));
+            }
+
+            renderTechnicianCards(filteredTechs);
+        });
+    }
+  
+    // ============================
+    // Search by keyword via API
+    // ============================
+    async function searchTechnicians(keyword) {
+        if (!keyword || keyword.trim() === "") {
+            renderTechnicianCards(technicians); // show all
+            return;
         }
-      });
 
-      if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
-      const data = await res.json();
-      Swal.fire("Success!", data.message || "Request sent!", "success");
+      const searchField = 'name'; // change to username/email/mobile/city if needed
+      const baseUrl = "http://localhost:8080/snapfix/user";
+        try {
+            const res = await fetch(`${baseUrl}/search/${searchField}/${encodeURIComponent(keyword)}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
 
-    } catch (err) {
-      console.error("Error sending request:", err);
-      Swal.fire("Error!", err.message || "Request failed!", "error");
+            if (!res.ok) throw new Error(`Search failed with status ${res.status}`);
+            const response = await res.json();
+            const filteredTechs = Array.isArray(response.data)
+                ? response.data.filter(user => user.userRole?.toUpperCase() === "TECHNICIAN")
+                : [];
+
+            renderTechnicianCards(filteredTechs);
+        } catch (err) {
+            console.error("Search error:", err);
+        }
     }
-  }
 
-  // // Update technician profile (with optional image)
-  // async function updateTechnician(userObj, fileInput) {
-  //   const formData = new FormData();
-  //   formData.append("user", new Blob([JSON.stringify(userObj)], { type: "application/json" }));
+    // ============================
+    // Event: Search input
+    // ============================
+    $('#searchInput').on('keyup', function() {
+        const keyword = $(this).val();
+        searchTechnicians(keyword);
+    });
 
-  //   if (fileInput && fileInput.files[0]) {
-  //     formData.append("profileImage", fileInput.files[0]);
-  //   }
+    // ============================
+    // Send service request
+    // ============================
+    async function sendRequestToTechnician(techId, techName) {
+        // try {
+        //     const res = await fetch(`http://localhost:8080/snapfix/requests/send/${techId}`, {
+        //         method: "POST",
+        //         headers: {
+        //             "Authorization": `Bearer ${token}`,
+        //             "Content-Type": "application/json"
+        //         }
+        //     });
 
-  //   try {
-  //     const res = await fetch("http://localhost:8080/snapfix/user/updateTech", {
-  //       method: "PUT",
-  //       headers: {
-  //         "Authorization": `Bearer ${token}`
-  //       },
-  //       body: formData
-  //     });
+        //     if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
+        //     await res.json();
 
-  //     if (!res.ok) throw new Error(`Update failed with status ${res.status}`);
-  //     const data = await res.json();
-  //     Swal.fire("Success!", data.message || "Profile updated!", "success");
+        //     Swal.fire({
+        //         title: "Success!",
+        //         html: `Your request has been sent to <strong>${techName}</strong>`,
+        //         icon: "success",
+        //         timer: 2000,
+        //         showConfirmButton: false
+        //     });
 
-  //     // Reload technicians after update
-  //     loadTechnicians();
+        // } catch (err) {
+        //     console.error("Error sending request:", err);
+        //     Swal.fire("Error!", err.message || "Request failed. Please try again.", "error");
+        // }
+        
+    }
 
-  //   } catch (err) {
-  //     console.error("Error updating technician:", err);
-  //     Swal.fire("Error!", err.message || "Update failed!", "error");
-  //   }
-  // }
-
-  loadTechnicians();
+    // ============================
+    // Initialize
+    // ============================
+    loadTechnicians();
+    setTimeout(setupFiltering, 1000);
 });
