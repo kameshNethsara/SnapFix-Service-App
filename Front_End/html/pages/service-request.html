@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapFix | New Service Request</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/Front_End/css/pages/sidebar.css">
+    <link rel="stylesheet" href="/Front_End/css/pages/topbar.css">
+    <link rel="stylesheet" href="/Front_End/css/pages/service-request.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+</head>
+<body>
+ <!-- Sidebar placeholder -->
+    <div id="sidebar"></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div id="topbar"></div>
+
+        <h1 class="h2 fw-bold text-primary">Service Request Overview</h1>
+
+        <main class="container my-4" style="max-width: 980px;">
+            <div id="alertBox" class="d-none"></div>
+
+            <div class="card">
+                <div class="card-body p-4 p-md-5">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h1 class="h4 mb-0">Create Service Request</h1>
+                        <div>
+                            <button id="btnSaveDraft" type="button" class="btn btn-outline-secondary btn-sm me-2"><i class="fa-regular fa-floppy-disk me-1"></i>Save draft</button>
+                            <button id="btnReset" type="button" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-rotate-left me-1"></i>Reset</button>
+                        </div>
+                    </div>
+
+                    <form id="serviceRequestForm" novalidate>
+                    <!-- Job basics -->
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label required" for="title">Title</label>
+                            <input id="title" name="title" type="text" class="form-control" placeholder="Ex: Fix leaking kitchen sink" required minlength="4" maxlength="120" />
+                            <div class="invalid-feedback">Please enter a short title (4–120 characters).</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label required" for="category">Category</label>
+                            <select id="category" name="category" class="form-select" required>
+                                <option value="" disabled selected>Choose…</option>
+                                <option value="AC">AC</option>
+                                <option value="Plumbing">Plumbing</option>
+                                <option value="Electrical">Electrical</option>
+                                <option value="Carpentry">Carpentry</option>
+                                <option value="Painting">Painting</option>
+                                <option value="Cleaning">Cleaning</option>
+                                <option value="Networking">Networking</option>
+                                <option value="Appliance Repair">Appliance Repair</option>
+                                <option value="HVAC">HVAC</option>
+                                <option value="Masonry">Masonry</option>
+                                <option value="Roofing">Roofing</option>
+                                <option value="Pest Control">Pest Control</option>
+                                <option value="ICT">ICT</option>
+                                <option value="Hardware">Hardware</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <div class="invalid-feedback">Please select a category.</div>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label required" for="description">Description</label>
+                            <textarea id="description" name="description" class="form-control" rows="4" placeholder="Describe the issue, access details, measurements, brand/model if any…" required minlength="10" maxlength="1500"></textarea>
+                            <div class="d-flex justify-content-between">
+                                <div class="invalid-feedback">Please provide at least 10 characters.</div>
+                                <small class="text-muted" id="descCount">0/1500</small>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-md-4">
+                            <label class="form-label required" for="priority">Priority</label>
+                            <select id="priority" name="priority" class="form-select" required>
+                                <option value="">Choose…</option>
+                                <option value="LOW">Low</option>
+                                <option value="NORMAL">Normal</option>
+                                <option value="HIGH">High</option>
+                                <option value="URGENT">Urgent</option>
+                            </select>
+                            <div class="invalid-feedback">Pick a priority level.</div>
+                        </div>
+
+                        <div class="col-sm-6 col-md-4">
+                            <label class="form-label" for="preferredDate">Preferred Date</label>
+                            <input id="preferredDate" name="preferredDate" type="date" class="form-control" />
+                        </div>
+
+                        <div class="col-sm-6 col-md-4">
+                            <label class="form-label" for="preferredTime">Preferred Time Window</label>
+                            <input id="preferredTime" name="preferredTime" type="text" class="form-control" placeholder="e.g., 9:00–11:00 AM" />
+                        </div>
+                    </div>
+
+                    <hr class="my-4" />
+
+                    <!-- Location & contact -->
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                        <label class="form-label required" for="street">Address</label>
+                        <input id="street" name="street" type="text" class="form-control" placeholder="Street / No. / Lane" required />
+                        <div class="invalid-feedback">Address is required.</div>
+                        </div>
+                        <div class="col-md-4">
+                        <label class="form-label required" for="city">City / Town</label>
+                        <input id="city" name="city" type="text" class="form-control" required />
+                        <div class="invalid-feedback">City is required.</div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                        <label class="form-label" for="postalCode">Postal Code</label>
+                        <input id="postalCode" name="postalCode" type="text" class="form-control" inputmode="numeric" pattern="^[0-9]{3,10}$" placeholder="e.g., 10200" />
+                        <div class="invalid-feedback">Use digits only (3–10).</div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                        <label class="form-label required" for="phone">Contact Phone</label>
+                        <input id="phone" name="phone" type="tel" class="form-control" inputmode="tel" pattern="^(?:0|\+94)[0-9]{9}$" placeholder="07XXXXXXXX or +94XXXXXXXXX" required />
+                        <div class="invalid-feedback">Enter a valid Sri Lankan phone number.</div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4" />
+
+                    <!-- Photos upload -->
+                    <div class="mb-3">
+                        <label class="form-label" for="photos">Attach Photos (optional)</label>
+                        <div id="dropzone" class="dropzone">
+                        <p class="mb-1"><i class="fa-regular fa-images me-2"></i>Drag & drop images here, or click to browse</p>
+                        <small class="text-muted">Up to 5 images, max 5 MB each. JPG/PNG only.</small>
+                        <input id="photos" name="photos" type="file" class="form-control d-none" accept="image/jpeg,image/png" multiple />
+                        </div>
+                        <div id="preview" class="preview-grid mt-3"></div>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2">
+                        <button id="btnSubmit" type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-paper-plane me-1"></i>Submit Request
+                        </button>
+                        <span class="text-muted small">Status will start as <strong>Pending</strong>.</span>
+                    </div>
+                    </form>
+                    <h2 class="mt-5">My Service Requests</h2>
+                    <table id="requestsTable" class="display table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Preferred Date</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+<!-- jQuery CDN (v3.7.1) -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/Front_End/js/pages/sidebar.js"></script>
+<script src="/Front_End/js/pages/service-request.js"></script>
+<script src="/Front_End/js/pages/topbar.js"></script>
+ <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>    
+</body>
+</html>

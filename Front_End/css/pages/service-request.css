@@ -1,0 +1,103 @@
+/* ===== ROOT & GLOBAL STYLES ===== */
+:root {
+    --primary: #4CAF50;
+    --primary-dark: #388E3C;
+    --primary-light: #C8E6C9;
+    --primary-extra-light: #f0faf0;
+    --secondary: #FFC107;
+    --accent: #2196F3;
+    --dark: #333;
+    --light: #f8f9fa;
+    --gray: #e0e0e0;
+    --danger: #f44336;
+    --warning: #ff9800;
+    --success: #4caf50;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s ease;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #f5f7fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--dark);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* ===== LAYOUT & STRUCTURE ===== */
+.main-content {
+    margin-left: 260px;
+    padding: 20px 30px;
+    transition: var(--transition);
+    min-height: 100vh;
+}
+
+@media (max-width: 992px) {
+    .main-content {
+        margin-left: 0;
+        padding: 15px;
+    }
+}
+
+/* ===== TYPOGRAPHY ===== */
+h1, h2, h4 {
+    font-weight: 700;
+    color: var(--dark);
+}
+
+h1 {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    /* border-bottom: 2px solid var(--primary-light); */
+    font-size: 2rem;
+}
+
+.card {
+     border: 0; 
+     border-radius: 1rem; 
+     box-shadow: 0 10px 25px rgba(0,0,0,0.06); 
+}
+    .required::after { 
+        content: " *"; 
+        color: #dc3545; 
+    }
+    .dropzone { 
+        border: 2px dashed #ced4da; 
+        border-radius: .75rem; 
+        padding: 1rem; 
+        text-align: center; 
+        background: #fff; 
+    }
+    .dropzone.dragover { 
+        border-color: #0d6efd; 
+        background: #eef5ff; 
+    }
+    .preview-grid { 
+        display: grid; 
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); 
+        gap: .75rem; 
+    }
+    .preview { 
+        position: relative; 
+        border-radius: .75rem; 
+        overflow: hidden; 
+        background: #fff; 
+        border: 1px solid #e9ecef; 
+    }
+    .preview img { 
+        width: 100%; 
+        height: 100px; 
+        object-fit: cover; 
+        display: block; 
+    }
+    .preview button { 
+        position: absolute; 
+        top: .25rem; 
+        right: .25rem; 
+    }
