@@ -82,14 +82,22 @@ public class AuthService {
         address.setCity(registerDTO.getCity() != null ? registerDTO.getCity() : "Default City");
         address.setPostalCode(registerDTO.getPostalCode() != null ? registerDTO.getPostalCode() : "00000");
 
-        // Create User object
+        // Determine Role
+        String roleStr = registerDTO.getUserRole() != null ? registerDTO.getUserRole().toUpperCase() : "USER";
+        Role role = Role.valueOf(roleStr);
+
+        // Set availability based on role
+        //boolean availability = "ADMIN".equalsIgnoreCase(roleStr) || "TECHNICIAN".equalsIgnoreCase(roleStr);
+        boolean availability =true; // Set all users to available by default
+                // Create User object
         User user = User.builder()
                 .userFullName(registerDTO.getUserFullName() != null ? registerDTO.getUserFullName() : registerDTO.getUserName())
                 .userImgURL(registerDTO.getUserImgURL() != null ? registerDTO.getUserImgURL() : "")
                 .userAddress(address)
                 .userEmail(registerDTO.getUserEmail() != null ? registerDTO.getUserEmail() : "")
                 .userMobile(registerDTO.getUserMobile() != null ? registerDTO.getUserMobile() : "")
-                .userRole(Role.valueOf(registerDTO.getUserRole() != null ? registerDTO.getUserRole() : "USER"))
+                .userRole(role)
+                .availability(availability) // ← availability set here
                 .userDepartment(registerDTO.getUserDepartment() != null ? registerDTO.getUserDepartment() : "")
                 .userInfo(registerDTO.getUserInfo() != null ? registerDTO.getUserInfo() : "")
                 .userWhenCreated(LocalDate.now())
@@ -101,6 +109,4 @@ public class AuthService {
         userRepository.save(user);
         return "User registered successfully";
     }
-
-
 }
