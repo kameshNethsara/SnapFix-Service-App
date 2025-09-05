@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapFix | Services</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/Front_End/css/pages/sidebar.css">
+    <link rel="stylesheet" href="/Front_End/css/pages/topbar.css">
+    <link rel="stylesheet" href="/Front_End/css/pages/services.css">
+</head>
+<body>
+    <!-- Sidebar placeholder -->
+    <div id="sidebar"></div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Top Bar -->
+        <div id="topbar"></div>
+
+        <!-- Service Title -->
+        <div class="mb-4">
+            <h1 class="h2 fw-bold text-primary">Service Overview</h1>
+        </div>
+
+        <!-- Service Stats -->
+       <div class="row services-stats mb-4 text-center">
+            <div class="col-lg-4 col-md-6 col-12 stat-item">
+                <div id="totalStatus" class="stat-value">0</div>
+                <div class="stat-label">Total Status</div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-12 stat-item">
+                <div id="completedCount" class="stat-value">0</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-12 stat-item">
+                <div id="inProgressCount" class="stat-value">0</div>
+                <div class="stat-label">In Progress</div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-12 stat-item">
+                <div id="approvedCount" class="stat-value">0</div>
+                <div class="stat-label">Approved</div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-12 stat-item">
+                <div id="pendingCount" class="stat-value">0</div>
+                <div class="stat-label">Pending</div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-12 stat-item">
+                <div id="cancelledCount" class="stat-value">0</div>
+                <div class="stat-label">Cancelled</div>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section mb-4">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Status</label>
+                    <select id="statusFilter" class="form-select">
+                        <option value="">All Statuses</option>
+                        <option value="PENDING">Pending</option>
+                        <option value="APPROVED">Approved</option>
+                        <option value="IN_PROGRESS">In Progress</option>
+                        <option value="COMPLETED">Completed</option>
+                        <option value="CANCELLED">Cancelled</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Category</label>
+                    <select id="categoryFilter" class="form-select">
+                        <option value="">All Categories</option>
+                        <option value="AC">AC</option>
+                        <option value="Plumbing">Plumbing</option>
+                        <option value="Electrical">Electrical</option>
+                        <option value="Carpentry">Carpentry</option>
+                        <option value="Painting">Painting</option>
+                        <option value="Cleaning">Cleaning</option>
+                        <option value="Networking">Networking</option>
+                        <option value="Appliance Repair">Appliance Repair</option>
+                        <option value="HVAC">HVAC</option>
+                        <option value="Masonry">Masonry</option>
+                        <option value="Roofing">Roofing</option>
+                        <option value="Pest Control">Pest Control</option>
+                        <option value="ICT">ICT</option>
+                        <option value="Hardware">Hardware</option>
+                        <option value="Other">Other</option>      
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">City</label>
+                    <input type="text" id="cityFilter" class="form-control" placeholder="Filter by city">
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button id="resetFilters" class="btn btn-outline-secondary w-100">Reset Filters</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Service Table -->
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered" id="servicesTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th style="display:none;">Request ID</th>
+                        <th style="display:none;">User ID</th>
+                        <th>User Name</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>City</th>
+                        <th>Phone</th>
+                        <th>Status</th>
+                        <th>Assigned Technician</th>
+                        <th>Preferred Date & Time</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Assign Technician Modal -->
+    <div class="modal fade" id="assignTechnicianModal" tabindex="-1" aria-labelledby="assignTechnicianModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Assign Technician</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Request:</strong> <span id="modalRequestTitle"></span></p>
+                    <p><strong>Status:</strong> <span id="modalRequestStatus"></span></p>
+                    <input type="hidden" id="currentRequestId">
+
+                    <!-- optional (user)category --technician(user)department filter and tech(user) availability -->
+
+                    <div class="mb-3">
+                        <label for="technicianSelect" class="form-label">Select Technician</label>
+                        <select id="technicianSelect" class="form-select"></select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="statusSelect" class="form-label">Update Status</label>
+                        <select id="statusSelect" class="form-select">
+                            <option value="PENDING">Pending</option>
+                            <option value="APPROVED">Approved</option>
+                            <option value="IN_PROGRESS">In Progress</option>
+                            <option value="COMPLETED">Completed</option>
+                            <option value="CANCELLED">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveAssignment" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/Front_End/js/pages/sidebar.js"></script>
+    <script src="/Front_End/js/pages/services.js"></script>
+    <script src="/Front_End/js/pages/topbar.js"></script>
+</body>
+</html>
