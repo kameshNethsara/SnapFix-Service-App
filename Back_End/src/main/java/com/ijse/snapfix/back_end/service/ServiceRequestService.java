@@ -9,6 +9,7 @@ public interface ServiceRequestService {
     public List<ServiceRequestDTO> getAllRequests();
     public List<ServiceRequestDTO> getRequestsByUserId(int userId);
     public ServiceRequestDTO getRequestById(Long id);
+    public ServiceRequestDTO assignTechnician(Long id, Integer technicianId, String status);
     public ServiceRequestDTO updateStatus(Long id, String status);
     public ServiceRequestDTO updateRequest(Long id, ServiceRequestDTO dto);
     public void deleteRequest(Long id);

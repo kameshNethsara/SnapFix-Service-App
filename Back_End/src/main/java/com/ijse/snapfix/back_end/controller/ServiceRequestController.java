@@ -1,9 +1,11 @@
 package com.ijse.snapfix.back_end.controller;
 
+import com.ijse.snapfix.back_end.dto.AssignTechnicianRequestDTO;
 import com.ijse.snapfix.back_end.dto.ServiceRequestDTO;
 import com.ijse.snapfix.back_end.service.ServiceRequestService;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +25,7 @@ public class ServiceRequestController {
         return ResponseEntity.ok(created);
     }
 
-    @GetMapping
+    @GetMapping("/getAllRequests")
     public ResponseEntity<List<ServiceRequestDTO>> getAllRequests() {
         return ResponseEntity.ok(service.getAllRequests());
     }
@@ -51,6 +53,20 @@ public class ServiceRequestController {
             @RequestBody ServiceRequestDTO dto) {
         return ResponseEntity.ok(service.updateRequest(id, dto));
     }
+
+    @PutMapping("/{id}/assign")
+    public ResponseEntity<?> assignTechnician(
+            @PathVariable Long id,
+            @RequestBody AssignTechnicianRequestDTO request) {
+        try {
+            ServiceRequestDTO dto = service.assignTechnician(id, request.getTechnicianId(), request.getStatus());
+            return ResponseEntity.ok(dto);
+        } catch (RuntimeException e) {
+            e.printStackTrace(); // see the full stack trace in console
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRequest(@PathVariable Long id) {

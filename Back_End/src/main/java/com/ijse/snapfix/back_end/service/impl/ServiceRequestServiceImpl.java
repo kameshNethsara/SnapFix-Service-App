@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,47 +68,70 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
                 .user(user)
                 .build();
 
-        // ===================== Assign nearest available technicians =====================
-        List<User> availableTechs = userRepository.findAvailableTechnicians();
+// ===================== Technician assignment =====================
+        if (dto.getAssignedTechnicianIds() != null && !dto.getAssignedTechnicianIds().isEmpty()) {
+            //Case 1: User selected technician manually
+            List<Integer> techIds = dto.getAssignedTechnicianIds();
+            req.setAssignedTechnicianIds(techIds);
 
-        List<User> nearestTechs = availableTechs.stream()
-                .filter(t -> t.getUserDepartment() != null
-                        && t.getUserDepartment().equalsIgnoreCase(dto.getCategory()))
-                .filter(t -> {
-                    if (userLat != null && userLon != null && t.getLatitude() != null && t.getLongitude() != null) {
-                        return isWithinRange(userLat, userLon, t.getLatitude(), t.getLongitude(), 30);
-                    }
-                    return t.getUserAddress() != null
-                            && t.getUserAddress().getCity() != null
-                            && t.getUserAddress().getCity().equalsIgnoreCase(
-                            dto.getCity() != null ? dto.getCity() : user.getUserAddress().getCity());
-                })
-                .collect(Collectors.toList());
+            // Get the first technician info
+            User tech = userRepository.findById(techIds.get(0))
+                    .orElseThrow(() -> new RuntimeException("Technician not found with ID: " + techIds.get(0)));
 
-        List<Integer> techIds = nearestTechs.stream().map(User::getUserId).collect(Collectors.toList());
-        req.setAssignedTechnicianIds(techIds);
+            dto.setTechnicianId(tech.getUserId());
+            dto.setTechnicianName(tech.getUserFullName());
+            dto.setTechnicianPhone(tech.getUserMobile());
 
-        // ===================== Set technician info in DTO =====================
-        if (!nearestTechs.isEmpty()) {
-            User firstTech = nearestTechs.get(0);
-            dto.setTechnicianId(firstTech.getUserId());
-            dto.setTechnicianName(firstTech.getUserFullName());
-            dto.setTechnicianPhone(firstTech.getUserMobile());
-            dto.setAssignedTechnicianIds(techIds);
-
-            // ===================== Create JobAssignment =====================
+            // Create JobAssignment
             JobAssignment assignment = new JobAssignment();
             assignment.setAssignedDate(LocalDate.now());
             assignment.setAssignmentStatus("PENDING");
-            assignment.setTechnician(firstTech);
+            assignment.setTechnician(tech);
             assignment.setServiceRequest(req); // owner side
-            req.setJobAssignment(assignment); // inverse side
+            req.setJobAssignment(assignment);  // inverse side
 
         } else {
-            dto.setTechnicianId(0);
-            dto.setTechnicianName("No technician available");
-            dto.setTechnicianPhone("N/A");
-            dto.setAssignedTechnicianIds(List.of(0));
+            //Case 2: Auto assign technician with your existing logic
+            List<User> availableTechs = userRepository.findAvailableTechnicians();
+
+            List<User> nearestTechs = availableTechs.stream()
+                    .filter(t -> t.getUserDepartment() != null
+                            && t.getUserDepartment().equalsIgnoreCase(dto.getCategory())
+                            && t.getUserAddress().getCity().equalsIgnoreCase(dto.getCity()))
+                    .filter(t -> {
+                        if (userLat != null && userLon != null && t.getLatitude() != null && t.getLongitude() != null) {
+                            return isWithinRange(userLat, userLon, t.getLatitude(), t.getLongitude(), 30);
+                        }
+                        return t.getUserAddress() != null
+                                && t.getUserAddress().getCity() != null
+                                && t.getUserAddress().getCity().equalsIgnoreCase(
+                                dto.getCity() != null ? dto.getCity() : user.getUserAddress().getCity());
+                    })
+                    .collect(Collectors.toList());
+
+            List<Integer> techIds = nearestTechs.stream().map(User::getUserId).collect(Collectors.toList());
+            req.setAssignedTechnicianIds(techIds);
+
+            if (!nearestTechs.isEmpty()) {
+                User firstTech = nearestTechs.get(0);
+                dto.setTechnicianId(firstTech.getUserId());
+                dto.setTechnicianName(firstTech.getUserFullName());
+                dto.setTechnicianPhone(firstTech.getUserMobile());
+                dto.setAssignedTechnicianIds(techIds);
+
+                JobAssignment assignment = new JobAssignment();
+                assignment.setAssignedDate(LocalDate.now());
+                assignment.setAssignmentStatus("PENDING");
+                assignment.setTechnician(firstTech);
+                assignment.setServiceRequest(req);
+                req.setJobAssignment(assignment);
+
+            } else {
+                dto.setTechnicianId(0);
+                dto.setTechnicianName("No technician available");
+                dto.setTechnicianPhone("N/A");
+                dto.setAssignedTechnicianIds(List.of(0));
+            }
         }
 
         // ===================== Save request =====================
@@ -147,6 +171,48 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         ServiceRequest req = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Request not found with ID: " + id));
         return mapToDTO(req);
+    }
+
+    @Override
+    public ServiceRequestDTO assignTechnician(Long id, Integer technicianId, String status) {
+        ServiceRequest req = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Service Request not found with ID: " + id));
+
+        if (technicianId == null) {
+            throw new RuntimeException("Technician ID is required");
+        }
+
+        User tech = userRepository.findById(technicianId)
+                .orElseThrow(() -> new RuntimeException("Technician not found with ID: " + technicianId));
+
+        // Initialize a mutable technician list
+        if (req.getAssignedTechnicianIds() == null) {
+            req.setAssignedTechnicianIds(new ArrayList<>());
+        } else {
+            req.getAssignedTechnicianIds().clear(); // clear old entries safely
+        }
+
+        // Add the technician ID to the mutable list
+        req.getAssignedTechnicianIds().add(tech.getUserId());
+
+        // Update JobAssignment
+        JobAssignment assignment = req.getJobAssignment();
+        if (assignment == null) {
+            assignment = new JobAssignment();
+            assignment.setServiceRequest(req);
+        }
+        assignment.setTechnician(tech);
+        assignment.setAssignedDate(LocalDate.now());
+        assignment.setAssignmentStatus("ASSIGNED");
+        req.setJobAssignment(assignment);
+
+        // Update status if provided
+        if (status != null && !status.isBlank()) {
+            req.setStatus(status);
+        }
+
+        ServiceRequest saved = repository.save(req);
+        return mapToDTO(saved);
     }
 
     @Override
@@ -240,11 +306,10 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         // Assign first technician info if exists
         if (entity.getAssignedTechnicianIds() != null && !entity.getAssignedTechnicianIds().isEmpty()) {
             Integer techId = entity.getAssignedTechnicianIds().get(0);
-            User tech = userRepository.findById(techId)
-                    .orElse(null);
+            User tech = userRepository.findById(techId).orElse(null);
             if (tech != null) {
                 dto.setTechnicianId(tech.getUserId());
-                dto.setTechnicianName(tech.getUserName());
+                dto.setTechnicianName(tech.getUserFullName());
                 dto.setTechnicianPhone(tech.getUserMobile());
             }
         }
