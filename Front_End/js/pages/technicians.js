@@ -197,34 +197,22 @@ $(document).ready(function() {
     });
 
     // ============================
-    // Send service request
+    // Send service request (select technician)
     // ============================
     async function sendRequestToTechnician(techId, techName) {
-        // try {
-        //     const res = await fetch(`http://localhost:8080/snapfix/requests/send/${techId}`, {
-        //         method: "POST",
-        //         headers: {
-        //             "Authorization": `Bearer ${token}`,
-        //             "Content-Type": "application/json"
-        //         }
-        //     });
+        // Just save technician info in localStorage
+        localStorage.setItem("selectedTechnicianId", techId);
+        localStorage.setItem("selectedTechnicianName", techName);
+        // console.log(`Technician ${techName} (ID: ${techId}) selected and saved to localStorage.`);
 
-        //     if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
-        //     await res.json();
-
-        //     Swal.fire({
-        //         title: "Success!",
-        //         html: `Your request has been sent to <strong>${techName}</strong>`,
-        //         icon: "success",
-        //         timer: 2000,
-        //         showConfirmButton: false
-        //     });
-
-        // } catch (err) {
-        //     console.error("Error sending request:", err);
-        //     Swal.fire("Error!", err.message || "Request failed. Please try again.", "error");
-        // }
-        
+        // (Optional) show confirmation
+        Swal.fire({
+            icon: "success",
+            title: "Technician Selected",
+            text: `You selected ${techName}. Please complete your request form.`,
+            timer: 1500,
+            showConfirmButton: false
+        });
     }
 
     // ============================
