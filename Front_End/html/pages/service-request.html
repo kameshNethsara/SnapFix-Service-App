@@ -17,6 +17,14 @@
 
     <!-- Main Content -->
     <div class="main-content">
+        
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.7); z-index:9999; justify-content:center; align-items:center;">
+            <div class="spinner-border text-primary" role="status" style="width:4rem; height:4rem;">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
         <!-- Top Bar -->
         <div id="topbar"></div>
 
@@ -38,6 +46,7 @@
                     <form id="serviceRequestForm" novalidate>
                     <!-- Job basics -->
                     <div class="row g-3">
+                        <input type="hidden" id="hiddenTechnicianId" name="technicianId">
                         <div class="col-md-8">
                             <label class="form-label required" for="title">Title</label>
                             <input id="title" name="title" type="text" class="form-control" placeholder="Ex: Fix leaking kitchen sink" required minlength="4" maxlength="120" />

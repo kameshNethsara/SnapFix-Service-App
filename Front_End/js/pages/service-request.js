@@ -9,6 +9,16 @@ let uploadedFiles = []; // store selected files before uploading
 let requestsTable = null; // store DataTable instance
 
 $(document).ready(function () {
+    const selectedTechId = localStorage.getItem("selectedTechnicianId");
+    const selectedTechName = localStorage.getItem("selectedTechnicianName");
+
+    console.log(`Technician ${selectedTechName} (ID: ${selectedTechId}) selected and saved to localStorage.`);
+
+    if (selectedTechId && selectedTechName) {
+        $("#technicianField").val(selectedTechName); 
+        $("#hiddenTechnicianId").val(selectedTechId); 
+    }
+
     initializePage();
     loadDraft();
 });
@@ -143,6 +153,9 @@ async function handleFormSubmit(e) {
     }
 
     try {
+        // show loading
+        $("#loadingOverlay").show();
+
         let imageUrls = [];
         if (uploadedFiles.length > 0) {
             imageUrls = await Promise.all(
@@ -161,7 +174,8 @@ async function handleFormSubmit(e) {
             city: $("#city").val(),
             postalCode: $("#postalCode").val(),
             phone: $("#phone").val(),
-            photoUrls: imageUrls
+            photoUrls: imageUrls,
+            assignedTechnicianIds: [$("#hiddenTechnicianId").val()]
         };
 
         const token = localStorage.getItem("jwtToken");
@@ -182,13 +196,20 @@ async function handleFormSubmit(e) {
         await response.json();
         showAlert("success", "Service request created successfully!");
         resetForm();
+        localStorage.removeItem("selectedTechnicianId");
+        localStorage.removeItem("selectedTechnicianName");
+
         await loadUserRequests();
 
     } catch (error) {
         console.error("Submission error:", error);
         showAlert("error", error.message || "Failed to submit service request");
+    } finally {
+        // hide loading
+        $("#loadingOverlay").hide();
     }
 }
+
 
 async function uploadImageToImgbb(file) {
     const formData = new FormData();

@@ -58,6 +58,12 @@ h1 {
     font-size: 2rem;
 }
 
+#loadingOverlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .card {
      border: 0; 
      border-radius: 1rem; 
@@ -100,4 +106,81 @@ h1 {
         position: absolute; 
         top: .25rem; 
         right: .25rem; 
+    }
+
+    /* ===== Users Table Styling ===== */
+    #requestsTable {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        background: #fff;
+    }
+
+    /* Table Head */
+    #requestsTable thead {
+        background: var(--primary-dark);
+        color: #fff;
+    }
+
+    /* Table Cells */
+    #requestsTable th, 
+    #requestsTable td {
+        vertical-align: middle;
+        padding: 12px 15px;
+        font-size: 0.95rem;
+        border-color: var(--gray);
+    }
+
+    .table-user-img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    /* Hover Effect on Row */
+    #requestsTable tbody tr {
+        transition: var(--transition);
+    }
+
+    #requestsTable tbody tr:hover {
+        background: var(--primary-extra-light);
+        transform: scale(1.01);
+        cursor: pointer;
+    }
+
+    /* Status Badges */
+    .status-active {
+        background: var(--success);
+        color: #fff;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .status-inactive {
+        background: var(--danger);
+        color: #fff;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    /* Action Buttons inside Table */
+    .table .btn {
+        border-radius: 8px;
+        font-size: 0.85rem;
+        padding: 6px 12px;
+        transition: var(--transition);
+    }
+
+    .table .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--card-shadow);
+    }
+    /* Row Hover Effect */
+    #requestsTable tbody tr:hover {
+        cursor: pointer;
     }
