@@ -1,0 +1,111 @@
+ /* ===== ROOT & GLOBAL STYLES ===== */
+:root {
+    --primary: #4CAF50;
+    --primary-dark: #388E3C;
+    --primary-light: #C8E6C9;
+    --primary-extra-light: #f0faf0;
+    --secondary: #FFC107;
+    --accent: #2196F3;
+    --dark: #333;
+    --light: #f8f9fa;
+    --gray: #e0e0e0;
+    --danger: #f44336;
+    --warning: #ff9800;
+    --success: #4caf50;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s ease;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #f5f7fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--dark);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* ===== LAYOUT & STRUCTURE ===== */
+.main-content {
+    margin-left: 260px;
+    padding: 20px 30px;
+    transition: var(--transition);
+    min-height: 100vh;
+}
+
+@media (max-width: 992px) {
+    .main-content {
+        margin-left: 0;
+        padding: 15px;
+    }
+}
+
+/* ===== TYPOGRAPHY ===== */
+h1, h2, h4 {
+    font-weight: 700;
+    color: var(--dark);
+}
+
+h1 {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    /* border-bottom: 2px solid var(--primary-light); */
+    font-size: 2rem;
+}
+
+/* Map container */
+#map {
+    height: 600px;
+    width: 100%;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    border: 2px solid var(--primary-light);
+    transition: var(--transition);
+}
+
+/* Hover effect on map container */
+#map:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    border-color: var(--primary);
+}
+
+/* Popup styling for markers */
+.leaflet-popup-content-wrapper {
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    background: #fff;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.leaflet-popup-content {
+    margin: 10px 14px;
+    font-size: 0.95rem;
+    color: var(--dark);
+}
+
+.leaflet-popup-tip {
+    background: #fff;
+}
+
+/* Map zoom controls */
+.leaflet-control-zoom {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+}
+
+.leaflet-control-zoom a {
+    background: var(--primary);
+    color: #fff;
+    border: none !important;
+    transition: var(--transition);
+}
+
+.leaflet-control-zoom a:hover {
+    background: var(--primary-dark);
+}
