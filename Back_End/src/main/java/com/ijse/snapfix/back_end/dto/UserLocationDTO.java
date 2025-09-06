@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 public class UserLocationDTO {
     private int userId;
+    private String name;
     private Double latitude;
     private Double longitude;
 }

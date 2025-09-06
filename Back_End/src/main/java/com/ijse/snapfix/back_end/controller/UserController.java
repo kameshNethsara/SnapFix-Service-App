@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -110,6 +111,12 @@ public class UserController {
         return ResponseEntity.ok(new APIResponse<>(
                 200, "Paged user list fetched successfully!", userPage
         ));
+    }
+
+    //technician location tracker
+    @GetMapping("/technicians/locations")
+    public List<UserLocationDTO> getTechnicianLocations() {
+        return userService.getAllTechnicianLocations();
     }
 
     @PatchMapping("activate/{id}")

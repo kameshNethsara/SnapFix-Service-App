@@ -186,6 +186,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserLocationDTO> getAllTechnicianLocations() {
+        return userRepository.findByUserRoleAndAvailability("TECHNICIAN", true)
+                .stream()
+                .filter(u -> u.getLatitude() != null && u.getLongitude() != null) // avoid nulls
+                .map(u -> new UserLocationDTO(
+                        u.getUserId(),
+                        u.getUserFullName(), //added new now for - UserLocationDTO
+                        u.getLatitude(),
+                        u.getLongitude()
+                ))
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
     public UserDTO updateAllFormData(int userId, UserDTO userDTO, MultipartFile profileImage) {
         if (profileImage != null && !profileImage.isEmpty()) {
             String fileUrl = saveFile(profileImage);

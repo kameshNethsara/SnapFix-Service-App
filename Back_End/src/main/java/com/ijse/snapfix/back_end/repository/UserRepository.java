@@ -38,6 +38,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("SELECT u FROM User u WHERE u.userRole = 'TECHNICIAN' AND u.availability = true")
     List<User> findAvailableTechnicians();
 
+    List<User> findByUserRoleAndAvailability(String role, boolean availability);
+
     Optional<User> findByUserName(String username); // for authentication
     Optional<User> findByUserEmail(String email); // for authentication
 
