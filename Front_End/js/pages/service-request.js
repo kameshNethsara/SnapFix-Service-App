@@ -15,8 +15,8 @@ $(document).ready(function () {
     console.log(`Technician ${selectedTechName} (ID: ${selectedTechId}) selected and saved to localStorage.`);
 
     if (selectedTechId && selectedTechName) {
-        $("#technicianField").val(selectedTechName); 
-        $("#hiddenTechnicianId").val(selectedTechId); 
+        $("#technicianField").val(selectedTechName);
+        $("#hiddenTechnicianId").val(selectedTechId);
     }
 
     initializePage();
@@ -163,6 +163,8 @@ async function handleFormSubmit(e) {
             );
         }
 
+        const technicianId = $("#hiddenTechnicianId").val();
+
         const requestData = {
             userId: currentUser.userId,
             title: $("#title").val(),
@@ -174,9 +176,13 @@ async function handleFormSubmit(e) {
             city: $("#city").val(),
             postalCode: $("#postalCode").val(),
             phone: $("#phone").val(),
-            photoUrls: imageUrls,
-            assignedTechnicianIds: [$("#hiddenTechnicianId").val()]
+            photoUrls: imageUrls
         };
+
+        // ✅ Only add technicianIds if a technician was selected
+        if (technicianId) {
+            requestData.assignedTechnicianIds = [parseInt(technicianId)];
+        }
 
         const token = localStorage.getItem("jwtToken");
         const response = await fetch(`${API_BASE}${SERVICE_REQUESTS_ENDPOINT}`, {
@@ -210,7 +216,6 @@ async function handleFormSubmit(e) {
     }
 }
 
-
 async function uploadImageToImgbb(file) {
     const formData = new FormData();
     formData.append("image", file);
@@ -226,22 +231,20 @@ async function uploadImageToImgbb(file) {
 }
 
 function buildDateTime() {
-    const date = $("#preferredDate").val();   // e.g., "2025-09-04"
-    let time = $("#preferredTime").val();     // e.g., "09:00" in 24h format
+    const date = $("#preferredDate").val();
+    let time = $("#preferredTime").val();
 
-    // Convert to 24h if needed
-    if (time.includes("AM") || time.includes("PM")) {
+    if (time && (time.includes("AM") || time.includes("PM"))) {
         const [hourMinute, ampm] = time.split(" ");
         let [hours, minutes] = hourMinute.split(":").map(Number);
         if (ampm === "PM" && hours < 12) hours += 12;
         if (ampm === "AM" && hours === 12) hours = 0;
-        time = `${hours.toString().padStart(2,"0")}:${minutes.toString().padStart(2,"0")}`;
+        time = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
     }
 
     if (date) return time ? `${date}T${time}:00` : `${date}T00:00:00`;
     return null;
 }
-
 
 // ---------------- REQUESTS TABLE ----------------
 async function loadUserRequests() {
@@ -264,23 +267,89 @@ async function loadUserRequests() {
     }
 }
 
+// function populateRequestsTable(requests) {
+//     if (!requestsTable) return;
+
+//     requestsTable.clear();
+//     requests.forEach(request => {
+//         requestsTable.row.add([
+//             request.requestId,
+//             request.title,
+//             request.category,
+//             request.description.substring(0, 50) + (request.description.length > 50 ? "..." : ""),
+//             request.priority,
+//             `<span class="badge bg-${getStatusBadgeClass(request.status)}">${request.status}</span>`,
+//             request.preferredDateTime ? new Date(request.preferredDateTime).toLocaleDateString() : "Not specified"
+//         ]);
+//     });
+//     requestsTable.draw();
+// }
+// function populateRequestsTable(requests) {
+//     if (!requestsTable) return;
+
+//     requestsTable.clear();
+//     requests.forEach(request => {
+//         requestsTable.row.add([
+//             request.requestId, // hidden column
+//             null,              // row number auto generate wenawa render walin
+//             request.title,
+//             request.category,
+//             request.description.substring(0, 50) + (request.description.length > 50 ? "..." : ""),
+//             request.priority,
+//             `<span class="badge bg-${getStatusBadgeClass(request.status)}">${request.status}</span>`,
+//             request.preferredDateTime ? new Date(request.preferredDateTime).toLocaleDateString() : "Not specified"
+//         ]);
+//     });
+//     requestsTable.draw();
+// }
 function populateRequestsTable(requests) {
     if (!requestsTable) return;
 
     requestsTable.clear();
     requests.forEach(request => {
+        // Prefer technicianId from DTO, fallback to assignedTechnicianIds[0]
+        const techId = request.technicianId || request.assignedTechnicianIds?.[0] || null;
+        const techName = request.technicianName || "N/A";
+
+        const actionBtn = request.status?.toUpperCase() === "COMPLETED"
+            ? `<button class="btn btn-sm btn-success btnRate" 
+                    data-id="${request.requestId}" 
+                    data-tech-id="${techId}" 
+                    data-tech-name="${techName}">
+                <i class="fa-solid fa-star me-1"></i>Rate
+            </button>`
+            : `<button class="btn btn-sm btn-secondary" disabled>
+                <i class="fa-solid fa-star me-1"></i>Rate
+            </button>`;
+
         requestsTable.row.add([
-            request.requestId,
+            request.requestId, // hidden column
+            null,              // serial number
             request.title,
             request.category,
             request.description.substring(0, 50) + (request.description.length > 50 ? "..." : ""),
             request.priority,
             `<span class="badge bg-${getStatusBadgeClass(request.status)}">${request.status}</span>`,
-            request.preferredDateTime ? new Date(request.preferredDateTime).toLocaleDateString() : "Not specified"
+            request.preferredDateTime ? new Date(request.preferredDateTime).toLocaleDateString() : "Not specified",
+            actionBtn
         ]);
     });
     requestsTable.draw();
+
+    $("#requestsTable").off("click", ".btnRate").on("click", ".btnRate", function () {
+        const requestId = $(this).data("id");
+        const technicianId = $(this).data("tech-id");
+        const technicianName = $(this).data("tech-name");
+
+        localStorage.setItem("selectedRequestId", requestId);
+        localStorage.setItem("selectedTechnicianId", technicianId);
+        localStorage.setItem("selectedTechnicianName", technicianName);
+
+        window.location.href = "/Front_End/html/pages/ratings-user.html";
+    });
 }
+
+
 
 function getStatusBadgeClass(status) {
     switch (status?.toUpperCase()) {
@@ -293,15 +362,39 @@ function getStatusBadgeClass(status) {
     }
 }
 
+// function setupDataTable() {
+//     if (!$.fn.DataTable.isDataTable("#requestsTable")) {
+//         requestsTable = $("#requestsTable").DataTable({
+//             responsive: true,
+//             ordering: true,
+//             searching: true
+//         });
+//     }
+// }
 function setupDataTable() {
     if (!$.fn.DataTable.isDataTable("#requestsTable")) {
         requestsTable = $("#requestsTable").DataTable({
             responsive: true,
             ordering: true,
-            searching: true
+            searching: true,
+            order: [[0, "desc"]], // requestId column (hidden) desc -> latest first
+            columnDefs: [
+                {
+                    targets: 0, // requestId hidden
+                    visible: false,
+                    searchable: false
+                },
+                {
+                    targets: 1, // serial number
+                    render: function (data, type, row, meta) {
+                        return meta.row + 1;
+                    }
+                }
+            ]
         });
     }
 }
+
 
 // ---------------- UTIL ----------------
 function showAlert(type, message) {

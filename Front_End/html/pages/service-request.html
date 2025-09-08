@@ -44,6 +44,7 @@
                     </div>
 
                     <form id="serviceRequestForm" novalidate>
+                        <input type="hidden" id="hiddenTechnicianId" name="assignedTechnicianIds">
                     <!-- Job basics -->
                     <div class="row g-3">
                         <input type="hidden" id="hiddenTechnicianId" name="technicianId">
@@ -157,13 +158,15 @@
                     <table id="requestsTable" class="display table table-striped" style="width:100%">
                         <thead>
                             <tr>
-                                <th>Request ID</th>
+                                <th hidden>Request ID</th>
+                                <th>#</th>
                                 <th>Title</th>
                                 <th>Category</th>
                                 <th>Description</th>
                                 <th>Priority</th>
                                 <th>Status</th>
                                 <th>Preferred Date</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
