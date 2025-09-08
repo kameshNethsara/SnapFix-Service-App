@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapFix | Rate Technician</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/Front_End/css/pages/sidebar.css">
+    <link rel="stylesheet" href="/Front_End/css/pages/topbar.css">
+    <link rel="stylesheet" href="/Front_End/css/pages/ratings-view-admin.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+</head>
+<body>
+
+    <!-- Sidebar placeholder -->
+    <div id="sidebar"></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div id="topbar"></div>
+
+        <!-- Page Header -->
+        <div class="page-header mb-4">
+            <h1 class="h2 fw-bold text-primary">Rating Overview</h1>
+            <p class="text-muted">Admin can view all ratings submitted by users</p>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered" id="ratingsTable">
+                <thead>
+                    <tr>
+                        <th hidden>Rating ID</th>
+                        <th>#</th>
+                        <th>Technician</th>
+                        <th>User</th>
+                        <th>Stars</th>
+                        <th>Comment</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- Technician Search Section -->
+        <div class="card p-4 mb-4">
+          <h5 class="mb-3"><i class="fas fa-search me-2 text-primary"></i>Find Technician</h5>
+          <div class="input-group mb-3">
+            <input type="text" id="searchTechInput" class="form-control" placeholder="Search technician by name...">
+            <button class="btn btn-outline-primary" id="searchTechBtn"><i class="fas fa-search"></i></button>
+          </div>
+          <div id="searchResults" class="list-group"></div>
+        </div>
+
+        <!-- Rating Card -->
+        <div class="card p-4 mb-4 d-none" id="ratingSection">
+          <div class="d-flex align-items-center gap-3 mb-4">
+            <img id="techAvatar" src="/Front_End/assets/img/default-user.jpeg"
+                alt="Technician" class="tech-avatar">
+            <div>
+              <h4 id="techName" class="mb-1">Select a technician</h4>
+              <div id="techDepartment" class="small-muted mb-1">Department</div>
+              <div id="techLocation" class="small-muted">Location</div>
+            </div>
+          </div>
+
+          <form id="ratingForm">
+            <div class="mb-4">
+              <label class="fw-semibold mb-2">Technician Rating Average</label>
+              <div class="d-flex align-items-center gap-2 mb-2" id="starRow">
+                <i class="fa-regular fa-star star" data-value="1"></i>
+                <i class="fa-regular fa-star star" data-value="2"></i>
+                <i class="fa-regular fa-star star" data-value="3"></i>
+                <i class="fa-regular fa-star star" data-value="4"></i>
+                <i class="fa-regular fa-star star" data-value="5"></i>
+                <span id="ratingLabel" class="ms-2 rating-text">Not rated</span>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Reviews Section -->
+        <div class="card p-4 d-none" id="reviewsSection">
+          <h5 class="mb-3"><i class="fas fa-star me-2 text-warning"></i>Recent Reviews</h5>
+          <div id="reviewsList" class="reviews-container">
+            <div class="text-center py-4 text-muted">
+              <i class="fas fa-comments fa-2x mb-2"></i>
+              <p>No reviews yet for this technician</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="text-center py-4 d-none">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="mt-2 text-muted">Loading...</p>
+        </div>
+      </div>
+
+    <!-- jQuery and other scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/Front_End/js/pages/sidebar.js"></script>
+    <script src="/Front_End/js/pages/topbar.js"></script>
+    <script src="/Front_End/js/pages/ratings-view-admin.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+</body>
+</html>
