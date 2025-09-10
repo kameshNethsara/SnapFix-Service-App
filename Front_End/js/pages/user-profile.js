@@ -1,4 +1,15 @@
 $(document).ready(function () {
+
+    // Authentication check
+    if (!localStorage.getItem("jwtToken") || !localStorage.getItem("userId")) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Authentication Required',
+            text: 'Please log in to rate technicians',
+            willClose: () => window.location.href = '/Front_End/html/login.html'
+        });
+        return;
+    }
     const userId = localStorage.getItem("userId");
 
     if (!userId) {
@@ -277,39 +288,39 @@ function enableFormInputs() {
 }
 // ===================================================
 // ================= Activity Logger =================
-function addActivity(action, type, description) {
-    const now = new Date();
-    const dateString = now.toLocaleString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit"
-    });
+// function addActivity(action, type, description) {
+//     const now = new Date();
+//     const dateString = now.toLocaleString("en-US", {
+//         year: "numeric",
+//         month: "short",
+//         day: "numeric",
+//         hour: "2-digit",
+//         minute: "2-digit"
+//     });
 
-    const timelineItem = `
-        <div class="timeline-item">
-            <div class="timeline-date">${dateString}</div>
-            <div class="timeline-content">
-                <div class="d-flex justify-content-between">
-                    <strong>${action}</strong>
-                    <span class="badge bg-${getBadgeColor(type)}">${type}</span>
-                </div>
-                <p class="mb-0">${description}</p>
-            </div>
-        </div>
-    `;
+//     const timelineItem = `
+//         <div class="timeline-item">
+//             <div class="timeline-date">${dateString}</div>
+//             <div class="timeline-content">
+//                 <div class="d-flex justify-content-between">
+//                     <strong>${action}</strong>
+//                     <span class="badge bg-${getBadgeColor(type)}">${type}</span>
+//                 </div>
+//                 <p class="mb-0">${description}</p>
+//             </div>
+//         </div>
+//     `;
 
-    $("#activityTimeline").prepend(timelineItem); // Add to top
-}
+//     $("#activityTimeline").prepend(timelineItem); // Add to top
+// }
 
-function getBadgeColor(type) {
-    switch(type.toLowerCase()) {
-        case "update": return "success";
-        case "request": return "primary";
-        case "support": return "warning";
-        case "report": return "info";
-        case "new": return "secondary";
-        default: return "dark";
-    }
-}
+// function getBadgeColor(type) {
+//     switch(type.toLowerCase()) {
+//         case "update": return "success";
+//         case "request": return "primary";
+//         case "support": return "warning";
+//         case "report": return "info";
+//         case "new": return "secondary";
+//         default: return "dark";
+//     }
+// }

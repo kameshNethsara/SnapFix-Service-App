@@ -278,9 +278,23 @@ textarea {
     font-size: 0.85rem;
 }
 
+.dark-table-heeader{
+    background-color: #333 !important;
+    color: white !important;
+}
+
+/*
+.dark-table-heeader table.dataTable thead>tr>th.sorting{
+    background-color: #ffffff !important;
+    color: white;
+     color: white !important; 
+}*/
+
+
 @media (max-width: 768px) {
     #ratingsTable thead th, #ratingsTable tbody td {
         font-size: 0.85rem;
         padding: 0.35rem;
     }
 }
+

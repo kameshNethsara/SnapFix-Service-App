@@ -1,6 +1,17 @@
 let selectedUserId = null;
 
 $(document).ready(function () {
+    // Authentication check
+    if (!localStorage.getItem("jwtToken") || !localStorage.getItem("userId")) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Authentication Required',
+            text: 'Please log in to rate technicians',
+            willClose: () => window.location.href = '/Front_End/html/login.html'
+        });
+        return;
+    }
+    
     const token = localStorage.getItem("jwtToken");
 
     // ===== Dynamic Departments =====

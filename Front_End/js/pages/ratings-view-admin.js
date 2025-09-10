@@ -23,7 +23,7 @@ $(document).ready(function () {
             icon: "error",
             title: "Authentication Required",
             text: "Please log in to continue",
-            willClose: () => (window.location.href = "/Front_End/pages/login.html"),
+            willClose: () => (window.location.href = "/Front_End/html/login.html"),
         });
         return;
     }
