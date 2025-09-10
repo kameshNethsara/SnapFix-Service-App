@@ -232,7 +232,7 @@ $(document).ready(function () {
         method: "PATCH",
         headers: { "Authorization": "Bearer " + jwtToken }
       });
-
+      addActivity("Assigned Technician", "Assign", `You assigned technician ID #${technicianId} to service request ID #${requestId}.`);
       Swal.fire("Success", "Technician assigned successfully", "success");
       $("#assignTechnicianModal").modal("hide");
       await fetchServices(); // refresh table & stats

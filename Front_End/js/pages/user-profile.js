@@ -197,6 +197,7 @@ function updateUserProfile() {
     })
     .then(data => {
         const url = $('#profilePicture').data('url') || $('#avatarImage').data('url') || "";
+        addActivity("Updated Profile", "Update", "You updated your personal information.");
         Swal.fire("Success", "Profile updated successfully!", "success");
         $('#profilePicture').data('url', url);
         localStorage.setItem("userImgURL", url);
@@ -242,6 +243,7 @@ function updatePassword() {
         return res.json();
     })
     .then(data => {
+        addActivity("Changed Password", "Update", "You changed your account password.");
         Swal.fire('Success', 'Password updated successfully!', 'success');
         // Clear password fields
         $('#currentPassword').val('');
@@ -272,4 +274,42 @@ function enableFormInputs() {
     $('#settings input, #settings textarea').each(function () {
         $(this).prop('disabled', false).prop('readonly', false).css('pointer-events', 'auto');
     });
+}
+// ===================================================
+// ================= Activity Logger =================
+function addActivity(action, type, description) {
+    const now = new Date();
+    const dateString = now.toLocaleString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+
+    const timelineItem = `
+        <div class="timeline-item">
+            <div class="timeline-date">${dateString}</div>
+            <div class="timeline-content">
+                <div class="d-flex justify-content-between">
+                    <strong>${action}</strong>
+                    <span class="badge bg-${getBadgeColor(type)}">${type}</span>
+                </div>
+                <p class="mb-0">${description}</p>
+            </div>
+        </div>
+    `;
+
+    $("#activityTimeline").prepend(timelineItem); // Add to top
+}
+
+function getBadgeColor(type) {
+    switch(type.toLowerCase()) {
+        case "update": return "success";
+        case "request": return "primary";
+        case "support": return "warning";
+        case "report": return "info";
+        case "new": return "secondary";
+        default: return "dark";
+    }
 }

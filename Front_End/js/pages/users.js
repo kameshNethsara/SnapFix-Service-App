@@ -137,7 +137,7 @@ async function addUser(token, table) {
 
         const data = await res.json();
         if (!res.ok) throw new Error(data.message || 'Failed to add user');
-
+        addActivity("Added User", "Create", `You added a new user: ${formData.userFullName} (${formData.userRole}).`);
         Swal.fire('Success', 'User Added!', 'success');
         clearForm();
         loadUsers(token, table);
@@ -287,7 +287,7 @@ async function updateUser(token, table, userId) {
 
         const data = await res.json();
         if (!res.ok) throw new Error(data.message || 'Failed to update user');
-
+        addActivity("Updated User", "Update", `You updated user: ${userObj.userFullName} (${userObj.userRole}).`);
         Swal.fire('Success', 'User Updated!', 'success');
         clearForm();
         loadUsers(token, table);
@@ -329,7 +329,7 @@ async function deleteUser(token, table) {
                     console.log("Delete response error data:", data); // debug
                     throw new Error(data.message || 'Failed to delete user');
                 }
-
+                addActivity("Deleted User", "Delete", `You deleted a user with ID: ${selectedUserId}.`);
                 Swal.fire('Deleted!', 'User has been deleted.', 'success');
                 clearForm();
                 loadUsers(token, table);
@@ -442,7 +442,7 @@ async function toggleUserStatus(userId, newStatus, token) {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!res.ok) throw new Error(`Failed to ${newStatus ? 'activate' : 'deactivate'} user`);
-
+        addActivity("Toggled User Status", "Update", `You ${newStatus ? 'activated' : 'deactivated'} a user with ID: ${userId}.`);
         Swal.fire('Success!', `User ${newStatus ? 'activated' : 'deactivated'}`, 'success');
         let table = $('#usersTable').DataTable();
         loadUsers(token, table);
@@ -460,7 +460,7 @@ async function toggleUserAvailability(userId, newAvailability, token) {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!res.ok) throw new Error(`Failed to ${newAvailability ? 'activate' : 'deactivate'} availability`);
-
+        addActivity("Toggled User Availability", "Update", `You set ${newAvailability ? 'available' : 'not available'} a user with ID: ${userId}.`);
         Swal.fire('Success!', `User is now ${newAvailability ? 'Available' : 'Not Available'}`, 'success');
         let table = $('#usersTable').DataTable();
         loadUsers(token, table);

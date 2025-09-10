@@ -86,6 +86,7 @@ $(document).ready(async function () {
             }
 
             Swal.fire("Success!", "Account created successfully!", "success").then(() => {
+                addActivity("User Registered", "Create", `User ${username} registered with role ${role}.`);
                 toggle(); // switch to login form
             });
 
@@ -161,6 +162,7 @@ $(document).ready(async function () {
             // } else {
             //     window.location.href = "/Front_End/html/pages/dashboard.html";
             // }
+            addActivity("User Logged In", "Login", `User ${username} with role ${role} logged in.`);
             window.location.href = "/Front_End/html/pages/dashboard.html";
         });
       } catch (error) {

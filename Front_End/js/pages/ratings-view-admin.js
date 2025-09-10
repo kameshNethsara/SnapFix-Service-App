@@ -369,6 +369,7 @@ $(document).on("click", ".delete-btn", async function () {
                 headers: { Authorization: `Bearer ${JWT}` },
             });
             if (!res.ok) throw res;
+            addActivity("Deleted Review", "Delete", "You deleted a review for a technician.");
             Swal.fire("Deleted!", "Rating deleted successfully.", "success");
             loadAllRatings();
         } catch (err) {
@@ -379,7 +380,9 @@ $(document).on("click", ".delete-btn", async function () {
 });
 
 // Edit rating (placeholder)
+//i remove that function
 $(document).on("click", ".edit-btn", function () {
     const ratingId = $(this).data("id");
+    addActivity("Edited Review", "Edit", "You edited a review for a technician.");
     Swal.fire("Edit feature", `You can implement an edit form for rating ID ${ratingId}`, "info");
 });

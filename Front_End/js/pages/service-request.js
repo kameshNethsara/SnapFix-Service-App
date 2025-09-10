@@ -201,6 +201,8 @@ async function handleFormSubmit(e) {
 
         await response.json();
         showAlert("success", "Service request created successfully!");
+        addActivity("Created Service Request", "Create", `You created a new service request titled "${requestData.title}".`);
+        Swal.fire("Success", "Service request created successfully!", "success");
         resetForm();
         localStorage.removeItem("selectedTechnicianId");
         localStorage.removeItem("selectedTechnicianName");
@@ -210,6 +212,7 @@ async function handleFormSubmit(e) {
     } catch (error) {
         console.error("Submission error:", error);
         showAlert("error", error.message || "Failed to submit service request");
+        Swal.fire("Error", error.message || "Failed to submit service request", "error");
     } finally {
         // hide loading
         $("#loadingOverlay").hide();
@@ -430,6 +433,7 @@ function saveDraft() {
     };
 
     localStorage.setItem("serviceRequestDraft", JSON.stringify(formData));
+    addActivity("Saved Draft", "Save", "You saved a draft of a service request.");
     showAlert("info", "Draft saved successfully!");
 }
 

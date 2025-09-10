@@ -105,6 +105,7 @@ $(document).ready(function () {
             if (!res.ok) throw res;
 
             $("#submitBtn").prop("disabled", false).html('<i class="fas fa-paper-plane me-2"></i>Submit Review');
+            addActivity("Submitted Review", "New", "You submitted a review for a technician.");
             Swal.fire({ icon: "success", title: "Success!", text: "Your review has been submitted.", timer: 2000, showConfirmButton: false });
 
             resetForm();

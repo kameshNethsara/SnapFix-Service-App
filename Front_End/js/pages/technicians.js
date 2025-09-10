@@ -117,7 +117,8 @@ $(document).ready(function() {
                 cancelButtonText: "Cancel"
             }).then((result) => {
                  if (result.isConfirmed) {
-                    sendRequestToTechnician(techId, techName);
+                     sendRequestToTechnician(techId, techName);
+                     addActivity("Selected Technician", "Select", `You selected technician ${techName} (ID: ${techId}) for a service request.`);
 
                     // After sending the request, redirect to the service-request page
                     window.location.href = "/Front_End/html/pages/service-request.html";
