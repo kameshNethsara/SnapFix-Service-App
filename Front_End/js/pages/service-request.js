@@ -457,3 +457,152 @@ function loadDraft() {
         $("#descCount").text(`${formData.description.length}/1500`);
     }
 }
+// ---------------- AI ESTIMATE ----------------
+async function generateEstimate(title, category, description) {
+    try {
+        const token = localStorage.getItem("jwtToken");
+        const response = await fetch("http://localhost:8080/snapfix/generate-estimate", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                title: title,
+                category: category,
+                description: description
+            })
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Backend error: ${response.status} ${errorText}`);
+        }
+
+        const data = await response.json();
+        return data.estimate || JSON.stringify(data);
+
+    } catch (err) {
+        console.error("Estimate generation error:", err);
+        return "Error: Unable to generate estimate at this time. Please try again later.";
+    }
+}
+
+// // Improved estimate display
+// $("#generateEstimateBtn").click(async () => {
+//     const title = $("#title").val()?.trim();
+//     const category = $("#category").val()?.trim();
+//     const description = $("#description").val()?.trim();
+
+//     if (!title || !category || !description) {
+//         return Swal.fire("Info", "Please fill title, category, and description.", "info");
+//     }
+
+//     $("#estimateResult").html('<div class="spinner-border spinner-border-sm" role="status"></div> Generating estimate...');
+    
+//     try {
+//         const estimate = await generateEstimate(title, category, description);
+//         $("#estimateResult").html(formatEstimate(estimate));
+//     } catch (error) {
+//         $("#estimateResult").html('<span class="text-danger">Failed to generate estimate. Please try again.</span>');
+//     }
+// });
+
+// // Format the AI response
+// function formatEstimate(estimateText) {
+//     // Check if it's an error message
+//     if (estimateText.includes("Error:") || estimateText.includes("Failed")) {
+//         return `
+//             <div class="estimate-card mt-2 p-3 bg-warning bg-opacity-10 rounded">
+//                 <h6 class="mb-2 text-warning"><i class="fa-solid fa-triangle-exclamation me-2"></i>Estimate Not Available</h6>
+//                 <div>${estimateText}</div>
+//                 <div class="mt-2 small">You can still submit your service request without an estimate.</div>
+//             </div>
+//         `;
+//     }
+    
+//     try {
+//         // Try to parse as JSON first
+//         const estimateData = JSON.parse(estimateText);
+//         return `
+//             <div class="estimate-card mt-2 p-3 bg-light rounded">
+//                 <h6 class="mb-2"><i class="fa-solid fa-file-invoice-dollar me-2"></i>Estimated Details:</h6>
+//                 <div class="row">
+//                     <div class="col-md-6 mb-2">
+//                         <strong>Price Range:</strong> ${estimateData.price_range || 'N/A'}
+//                     </div>
+//                     <div class="col-md-6 mb-2">
+//                         <strong>Time Estimate:</strong> ${estimateData.time_estimate || 'N/A'}
+//                     </div>
+//                     <div class="col-md-6 mb-2">
+//                         <strong>Travel Cost:</strong> ${estimateData.travel_cost || 'N/A'}
+//                     </div>
+//                 </div>
+//                 ${estimateData.notes ? `<div class="mt-2 p-2 bg-white rounded"><strong>Notes:</strong> ${estimateData.notes}</div>` : ''}
+//             </div>
+//         `;
+//     } catch (e) {
+//         // If not JSON, display as plain text
+//         return `
+//             <div class="estimate-card mt-2 p-3 bg-light rounded">
+//                 <h6 class="mb-2"><i class="fa-solid fa-file-invoice-dollar me-2"></i>AI Estimate:</h6>
+//                 <div>${estimateText.replace(/\n/g, '<br>')}</div>
+//             </div>
+//         `;
+//     }
+// }
+
+$("#generateEstimateBtn").click(async () => {
+    const title = $("#title").val()?.trim();
+    const category = $("#category").val()?.trim();
+    const description = $("#description").val()?.trim();
+
+    if (!title || !category || !description) {
+        return Swal.fire("Info", "Please fill title, category, and description.", "info");
+    }
+
+    $("#estimateResult").html('<div class="spinner-border spinner-border-sm" role="status"></div> Generating estimate...');
+
+    try {
+        const estimate = await generateEstimate(title, category, description);
+        $("#estimateResult").html(formatEstimate(estimate));
+        
+    } catch (error) {
+        $("#estimateResult").html('<span class="text-danger">Failed to generate estimate. Please try again.</span>');
+    }
+});
+
+// Format the AI response
+function formatEstimate(estimateText) {
+    try {
+        const data = JSON.parse(estimateText); // parse JSON
+
+        return `
+        <div class="estimate-card mt-3 p-3 bg-white rounded shadow-sm border">
+            <h5 class="mb-3 text-primary"><i class="fa-solid fa-file-invoice-dollar me-2"></i>Estimated Details</h5>
+            <div class="row g-2">
+                <div class="col-md-6">
+                    <div class="p-2 border rounded bg-light"><strong>Price Range:</strong> ${data.price_range || 'N/A'}</div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-2 border rounded bg-light"><strong>Time Estimate:</strong> ${data.time_estimate || 'N/A'}</div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-2 border rounded bg-light"><strong>Travel Cost:</strong> ${data.travel_cost || 'N/A'}</div>
+                </div>
+                ${data.notes ? `
+                <div class="col-12">
+                    <div class="p-2 border rounded bg-light"><strong>Notes:</strong> ${data.notes}</div>
+                </div>` : ''}
+            </div>
+        </div>`;
+    } catch (e) {
+        // fallback if AI returns plain text
+        return `
+        <div class="estimate-card mt-3 p-3 bg-white rounded shadow-sm border">
+            <h5 class="mb-2 text-primary"><i class="fa-solid fa-file-invoice-dollar me-2"></i>AI Estimate</h5>
+            <div>${estimateText.replace(/\n/g, '<br>')}</div>
+        </div>`;
+    }
+}
+

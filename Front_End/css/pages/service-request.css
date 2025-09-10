@@ -192,3 +192,56 @@ h1 {
     #requestsTable tbody tr:hover {
         cursor: pointer;
     }
+
+    /* Estimate card styling */
+.estimate-card {
+    border-left: 4px solid #0d6efd;
+    transition: all 0.3s ease;
+}
+
+.estimate-card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Dropzone improvements */
+.dropzone {
+    border: 2px dashed #dee2e6;
+    border-radius: 0.375rem;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dropzone.dragover {
+    border-color: #0d6efd;
+    background-color: rgba(13, 110, 253, 0.05);
+}
+
+/* Preview image styling */
+.preview {
+    transition: transform 0.2s;
+}
+
+.preview:hover {
+    transform: scale(1.05);
+}
+
+.preview img {
+    border: 1px solid #dee2e6;
+}
+
+#generateEstimateBtn{
+    margin-bottom: 10px;
+    color: #000000;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+#generateEstimateBtn:hover {
+    background-color: #0056b3;
+     color: #fff;
+}
+
