@@ -1,0 +1,266 @@
+/* ===== ROOT & GLOBAL STYLES ===== */
+:root {
+    --primary: #4CAF50;
+    --primary-dark: #388E3C;
+    --primary-light: #C8E6C9;
+    --primary-extra-light: #f0faf0;
+    --secondary: #FFC107;
+    --accent: #2196F3;
+    --dark: #333;
+    --light: #f8f9fa;
+    --gray: #e0e0e0;
+    --danger: #f44336;
+    --warning: #ff9800;
+    --success: #4caf50;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s ease;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #f0f5f0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--dark);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* ===== LAYOUT & STRUCTURE ===== */
+.main-content {
+    margin-top: 70px;
+    padding: 20px;
+}
+
+@media (max-width: 992px) {
+    .main-content {
+        margin-top: 100px;
+        padding: 20px;
+    }
+}
+
+/* ===== TYPOGRAPHY ===== */
+h1, h2, h4 {
+    font-weight: 700;
+    color: var(--dark);
+}
+
+h1 {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    font-size: 2rem;
+}
+
+.container h3 ,#paymentsTableh3{
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: var(--primary-dark);
+}
+
+/* ===== CARDS ===== */
+.card {
+    border-radius: 10px;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
+    background-color: #fff;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+.card-body h5 {
+    font-weight: 600;
+    color: var(--primary-dark);
+}
+
+.card-body p {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+}
+
+/* ===== FORM ELEMENTS ===== */
+.form-group label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--dark);
+}
+
+.form-control {
+    border-radius: 6px;
+    border: 1px solid var(--gray);
+    transition: var(--transition);
+}
+
+.form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.2);
+}
+
+/* ===== BUTTONS ===== */
+.btn-primary {
+    background-color: var(--primary);
+    border: none;
+    border-radius: 6px;
+    transition: var(--transition);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+}
+
+/* ===== IMAGE PREVIEW ===== */
+.preview img {
+    max-height: 150px;
+    border-radius: 6px;
+    margin-top: 5px;
+    border: 1px solid var(--gray);
+}
+
+/* ===== Payments Table Styling ===== */
+#paymentsTableDiv{
+    background-color: white;
+    border-radius: 20px;
+    width: 100%;
+    padding: 12px;
+}
+#paymentsTable {
+    width: 100%;
+    border-collapse: separate; /* allow rounded corners */
+    border-spacing: 0; 
+    border-radius: 12px; /* rounded corners */
+    background-color: #ffffff; /* clean white background */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* subtle shadow */
+    overflow: hidden; /* round corners affect inner content */
+    margin: 10px;
+}
+
+/* Table Head */
+
+#paymentsTable thead tr th{
+    background-color: var(--dark);
+    color: #fff;
+    font-weight: 600;
+}
+
+/* Table Cells */
+#paymentsTable th, 
+#paymentsTable td {
+    padding: 12px 15px;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #e0e0e0; /* soft separator line */
+}
+
+/* Rounded corners for first and last header cells */
+#paymentsTable thead th:first-child {
+    border-top-left-radius: 12px;
+}
+#paymentsTable thead th:last-child {
+    border-top-right-radius: 12px;
+}
+
+/* Hover Effect on Rows */
+#paymentsTable tbody tr {
+    transition: all 0.3s ease;
+}
+
+#paymentsTable tbody tr:hover {
+    background-color: #f8f9fa; /* light hover */
+    transform: scale(1.01);
+}
+
+/* Bill Image inside Table */
+#paymentsTable img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+#loadingSpinner {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    #paymentsTable th,
+    #paymentsTable td {
+        font-size: 0.85rem;
+        padding: 8px 10px;
+    }
+
+    #paymentsTable img {
+        width: 40px;
+        height: 40px;
+    }
+}
+/* ===== Tablet Screens (max 992px) ===== */
+@media (max-width: 992px) {
+    .main-content {
+        margin-left: 0 !important;  /* sidebar collapses */
+        padding: 15px;
+    }
+
+    .page-header h1 {
+        font-size: 1.6rem;
+    }
+
+    #paymentsTableDiv {
+        padding: 8px;
+    }
+}
+
+/* ===== Mobile Screens (max 576px) ===== */
+@media (max-width: 576px) {
+    /* Headings smaller */
+    .page-header h1 {
+        font-size: 1.3rem;
+        text-align: center;
+    }
+    .container h3,
+    #paymentsTableh3 {
+        font-size: 1.1rem;
+        text-align: center;
+    }
+
+    /* Table becomes horizontally scrollable */
+    #paymentsTableDiv {
+        overflow-x: auto;
+    }
+    #paymentsTable {
+        min-width: 600px; /* force horizontal scroll if needed */
+    }
+
+    /* Table text shrink */
+    #paymentsTable th,
+    #paymentsTable td {
+        font-size: 0.8rem;
+        padding: 6px;
+    }
+
+    /* Bill images smaller */
+    #paymentsTable img {
+        width: 35px;
+        height: 35px;
+    }
+
+    /* Buttons full width */
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
