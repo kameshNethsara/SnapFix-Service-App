@@ -1,0 +1,460 @@
+ /* ===== ROOT & GLOBAL STYLES ===== */
+:root {
+    --primary: #4CAF50;
+    --primary-dark: #388E3C;
+    --primary-light: #C8E6C9;
+    --primary-extra-light: #f0faf0;
+    --secondary: #FFC107;
+    --accent: #2196F3;
+    --dark: #333;
+    --light: #f8f9fa;
+    --gray: #e0e0e0;
+    --danger: #f44336;
+    --warning: #ff9800;
+    --success: #4caf50;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s ease;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #f0f5f0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--dark);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* ===== LAYOUT & STRUCTURE ===== */
+.main-content {
+    margin-top: 70px;
+    padding: 20px;
+}
+
+@media (max-width: 992px) {
+    .main-content {
+        margin-top: 100px;
+        padding: 20px;
+    }
+}
+/* ===== TYPOGRAPHY ===== */
+h1, h2, h4 {
+    font-weight: 700;
+    color: var(--dark);
+}
+
+h1 {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    /* border-bottom: 2px solid var(--primary-light); */
+    font-size: 2rem;
+}
+
+.payments-section {
+    margin-top: 30px;
+}
+
+#paymentsTable th, #paymentsTable td {
+    vertical-align: middle;
+}
+
+.btn-pay {
+    background-color: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 5px;
+    transition: var(--transition);
+}
+
+.btn-pay:hover {
+    background-color: var(--primary-dark);
+    color: #fff;
+}
+/* ===== Payment Card Styling ===== */
+
+/* ===== Enhanced Payment Card Styling ===== */
+/* ===== Enhanced Payment Card Styling - Wider & Thicker ===== */
+#paymentCards {
+    gap: 2rem;
+}
+
+.payment-card {
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
+    background-color: #fff;
+    overflow: hidden;
+    border: none;
+    height: 100%;
+    width: 100%; /* Ensure full width within column */
+    min-height: 480px; /* Make cards thicker */
+}
+
+.payment-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+}
+
+.payment-card .card-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: 1.25rem 1.75rem;
+    border-bottom: none;
+    position: relative;
+}
+
+.payment-card .card-header h5 {
+    font-weight: 700;
+    margin: 0;
+    color: white;
+    font-size: 1.25rem;
+}
+
+.payment-card .card-body {
+    padding: 1.75rem;
+}
+
+.payment-card .card-footer {
+    background-color: var(--primary-extra-light);
+    border-top: 1px solid var(--primary-light);
+    padding: 1.25rem 1.75rem;
+}
+
+.payment-card .info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    align-items: flex-start;
+}
+
+.payment-card .info-label {
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.9rem;
+    flex: 1;
+}
+
+.payment-card .info-value {
+    color: #555;
+    font-size: 0.95rem;
+    flex: 1.5;
+    text-align: right;
+    word-break: break-word;
+}
+
+.payment-card .amount-display {
+    background-color: var(--primary-extra-light);
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    margin: 1.5rem 0;
+    border-left: 4px solid var(--primary);
+}
+
+.payment-card .amount-label {
+    font-size: 0.9rem;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.payment-card .amount-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+}
+
+.payment-card .bill-image {
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 1.25rem 0;
+    border: 1px solid var(--gray);
+    max-height: 180px;
+}
+
+.payment-card .bill-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.payment-card .bill-image:hover img {
+    transform: scale(1.05);
+}
+
+.payment-card .payment-method {
+    border-radius: 8px;
+    border: 1px solid var(--gray);
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    margin: 1.25rem 0;
+    height: auto;
+}
+
+.payment-card .btn-pay {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 0.85rem 1.5rem;
+    font-weight: 700;
+    width: 100%;
+    transition: var(--transition);
+    box-shadow: 0 4px 10px rgba(76, 175, 80, 0.25);
+    font-size: 1rem;
+}
+
+.payment-card .btn-pay:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, #2c7a2f 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(76, 175, 80, 0.35);
+}
+
+.payment-card .btn-pay:disabled {
+    background: linear-gradient(135deg, #9e9e9e 0%, #757575 100%);
+    transform: none;
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+.payment-card .status-badge {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.75rem;
+    font-size: 0.85rem;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-weight: 700;
+}
+
+.status-pending {
+    background-color: var(--warning);
+    color: white;
+}
+
+.status-paid {
+    background-color: var(--success);
+    color: white;
+}
+
+/* Make cards wider by adjusting column structure */
+@media (min-width: 768px) {
+    #paymentCards .col-md-6 {
+        flex: 0 0 48%; /* Wider cards - nearly half width */
+        max-width: 48%;
+    }
+}
+
+@media (min-width: 1200px) {
+    #paymentCards .col-lg-4 {
+        flex: 0 0 32%; /* Slightly wider cards */
+        max-width: 32%;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+    .payment-card {
+        min-height: auto; /* Remove fixed height on mobile */
+    }
+    
+    .payment-card .info-row {
+        flex-direction: column;
+    }
+    
+    .payment-card .info-value {
+        text-align: left;
+        margin-top: 0.25rem;
+    }
+    
+    .payment-card .card-body {
+        padding: 1.25rem;
+    }
+    
+    .payment-card .card-header,
+    .payment-card .card-footer {
+        padding: 1rem 1.25rem;
+    }
+}
+.payment-card {
+    display: flex;
+    flex-direction: column;
+    height: 500px; /* fixed card height */
+}
+
+.scroll-content {
+    overflow-y: auto;   /* scroll inside card body */
+    padding-right: 5px; /* optional: avoid scrollbar overlaying content */
+}
+
+.scroll-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scroll-content::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 3px;
+}
+
+ /* ===== Payments Table Styling =====  */
+#paymentsTableDiv{
+    background-color: white;
+    border-radius: 20px;
+    width: 100%;
+    padding: 12px;
+}
+#paymentsTable {
+    width: 100%;
+    border-collapse: separate; /* allow rounded corners */
+    border-spacing: 0; 
+    border-radius: 12px; /* rounded corners */
+    background-color: #ffffff; /* clean white background */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* subtle shadow */
+    overflow: hidden; /* round corners affect inner content */
+    margin: 10px;
+}
+
+/* Table Head */
+
+#paymentsTable thead tr th{
+    background-color: var(--dark);
+    color: #fff;
+    font-weight: 600;
+}
+
+/* Table Cells */
+#paymentsTable th, 
+#paymentsTable td {
+    padding: 12px 15px;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #e0e0e0; /* soft separator line */
+}
+
+/* Rounded corners for first and last header cells */
+#paymentsTable thead th:first-child {
+    border-top-left-radius: 12px;
+}
+#paymentsTable thead th:last-child {
+    border-top-right-radius: 12px;
+}
+
+/* Hover Effect on Rows */
+#paymentsTable tbody tr {
+    transition: all 0.3s ease;
+}
+
+#paymentsTable tbody tr:hover {
+    background-color: #f8f9fa; /* light hover */
+    transform: scale(1.01);
+}
+
+/* Bill Image inside Table */
+#paymentsTable img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card-body .row {
+        flex-direction: column;
+    }
+    .card-body .col-md-6 {
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* ===== Responsive Main Content ===== */
+@media (max-width: 992px) {
+    .main-content {
+        margin-left: 0;
+        padding: 15px;
+    }
+}
+
+/* ===== Payment Cards Responsive ===== */
+@media (max-width: 767px) {
+    .payment-card {
+        min-height: auto;
+    }
+
+    .payment-card .info-row {
+        flex-direction: column;
+    }
+
+    .payment-card .info-value {
+        text-align: left;
+        margin-top: 0.25rem;
+    }
+
+    .payment-card .card-body {
+        padding: 1.25rem;
+    }
+
+    .payment-card .card-header,
+    .payment-card .card-footer {
+        padding: 1rem 1.25rem;
+    }
+}
+
+/* Make cards wider on larger screens */
+@media (min-width: 768px) {
+    #paymentCards .col-md-6 {
+        flex: 0 0 48%;
+        max-width: 48%;
+    }
+}
+
+@media (min-width: 1200px) {
+    #paymentCards .col-lg-4 {
+        flex: 0 0 32%;
+        max-width: 32%;
+    }
+}
+
+/* ===== Scrollable Card Content ===== */
+.scroll-content {
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.scroll-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scroll-content::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 3px;
+}
+
+/* ===== Payments Table Responsive ===== */
+.table-responsive {
+    overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+    #paymentsTableDiv {
+        padding: 8px;
+    }
+    
+    #paymentsTable th, 
+    #paymentsTable td {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+    }
+}
+
+/* ===== Buttons Responsive ===== */
+@media (max-width: 576px) {
+    .btn-pay {
+        font-size: 0.9rem;
+        padding: 0.7rem 1rem;
+    }
+}
