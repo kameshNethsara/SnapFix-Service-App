@@ -14,4 +14,6 @@ public class UserLocationDTO {
     private String name;
     private Double latitude;
     private Double longitude;
+    private Boolean availability;
+    private String imgURL;
 }

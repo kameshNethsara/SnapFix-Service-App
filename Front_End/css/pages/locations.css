@@ -1,4 +1,4 @@
- /* ===== ROOT & GLOBAL STYLES ===== */
+/* ===== ROOT & GLOBAL STYLES ===== */
 :root {
     --primary: #4CAF50;
     --primary-dark: #388E3C;
@@ -23,7 +23,7 @@
 }
 
 body {
-    background-color: #f5f7fa;
+    background-color: #f0f5f0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: var(--dark);
     overflow-x: hidden;
@@ -32,16 +32,14 @@ body {
 
 /* ===== LAYOUT & STRUCTURE ===== */
 .main-content {
-    margin-left: 260px;
-    padding: 20px 30px;
-    transition: var(--transition);
-    min-height: 100vh;
+    margin-top: 70px;
+    padding: 20px;
 }
 
 @media (max-width: 992px) {
     .main-content {
-        margin-left: 0;
-        padding: 15px;
+        margin-top: 100px;
+        padding: 20px;
     }
 }
 
@@ -54,11 +52,10 @@ h1, h2, h4 {
 h1 {
     margin-bottom: 1.5rem;
     padding-bottom: 0.5rem;
-    /* border-bottom: 2px solid var(--primary-light); */
     font-size: 2rem;
 }
 
-/* Map container */
+/* ===== MAP STYLES ===== */
 #map {
     height: 600px;
     width: 100%;
@@ -68,13 +65,12 @@ h1 {
     transition: var(--transition);
 }
 
-/* Hover effect on map container */
 #map:hover {
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
     border-color: var(--primary);
 }
 
-/* Popup styling for markers */
+/* Leaflet popups */
 .leaflet-popup-content-wrapper {
     border-radius: 12px;
     box-shadow: var(--card-shadow);
@@ -92,7 +88,7 @@ h1 {
     background: #fff;
 }
 
-/* Map zoom controls */
+/* Zoom controls */
 .leaflet-control-zoom {
     border-radius: 12px;
     overflow: hidden;
@@ -109,9 +105,10 @@ h1 {
 .leaflet-control-zoom a:hover {
     background: var(--primary-dark);
 }
-/* Loading overlay */
+
+/* ===== LOADING OVERLAY ===== */
 #loadingOverlay {
-  position: absolute;
+  position: fixed; /* changed to fixed for proper responsiveness */
   top: 0;
   left: 0;
   width: 100%;
@@ -137,3 +134,75 @@ h1 {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* ===== Tablet (≤992px) ===== */
+@media (max-width: 992px) {
+    .main-content {
+        margin-left: 0 !important; /* sidebar collapses */
+        padding: 15px;
+    }
+
+    .page-header h1 {
+        font-size: 1.6rem;
+        text-align: center;
+    }
+
+    /* Map adjustments */
+    #map {
+        /* smaller height for very small phones */
+        border-radius: 10px;
+    }
+
+    /* Popup text */
+    .leaflet-popup-content {
+        font-size: 0.8rem;
+        line-height: 1.4;
+    }
+
+}
+
+/* ===== Mobile (≤576px) ===== */
+@media (max-width: 576px) {
+    .main-content {
+        padding: 10px;
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.3rem;
+    }
+
+    /* Map adjustments */
+    #map {
+        height: 400px; /* smaller height for very small phones */
+        border-radius: 10px;
+    }
+
+    /* Popup text */
+    .leaflet-popup-content {
+        font-size: 0.8rem;
+        line-height: 1.4;
+    }
+
+    /* Buttons inside map or overlays stack */
+    .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 8px;
+    }
+}
+
+/* ===== Ultra Small (≤360px) ===== */
+@media (max-width: 360px) {
+    .page-header h1 {
+        font-size: 1.1rem;
+    }
+    #map {
+        height: 200px;
+    }
+}
+
