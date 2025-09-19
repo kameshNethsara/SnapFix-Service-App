@@ -3,13 +3,17 @@ package com.ijse.snapfix.back_end.service.impl;
 import com.ijse.snapfix.back_end.dto.PasswordUpdateDTO;
 import com.ijse.snapfix.back_end.dto.UserDTO;
 import com.ijse.snapfix.back_end.dto.UserLocationDTO;
+import com.ijse.snapfix.back_end.entity.Role;
 import com.ijse.snapfix.back_end.entity.User;
 import com.ijse.snapfix.back_end.entity.UserAddress;
 import com.ijse.snapfix.back_end.repository.UserRepository;
 import com.ijse.snapfix.back_end.service.AuthService;
 import com.ijse.snapfix.back_end.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,12 +32,14 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final AuthService authService;
+//    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     // Convert DTO to Entity
     private User convertToEntity(UserDTO dto) {
@@ -185,20 +191,24 @@ public class UserServiceImpl implements UserService {
         return convertToDTO(savedUser);
     }
 
-    @Override
     public List<UserLocationDTO> getAllTechnicianLocations() {
-        return userRepository.findByUserRoleAndAvailability("TECHNICIAN", true)
-                .stream()
-                .filter(u -> u.getLatitude() != null && u.getLongitude() != null) // avoid nulls
-                .map(u -> new UserLocationDTO(
-                        u.getUserId(),
-                        u.getUserFullName(), //added new now for - UserLocationDTO
-                        u.getLatitude(),
-                        u.getLongitude()
-                ))
+        List<User> technicians = userRepository.findByUserRole(Role.TECHNICIAN);
+        log.info("Found technicians: {}", technicians.size());
+        return technicians.stream()
+                .filter(u -> u.getLatitude() != null && u.getLongitude() != null)
+                .map(u -> {
+                    log.info("Mapping technician: {} - {}", u.getUserId(), u.getUserFullName());
+                    return new UserLocationDTO(
+                            u.getUserId(),
+                            u.getUserFullName(),
+                            u.getLatitude(),
+                            u.getLongitude(),
+                            u.isAvailability(),
+                            u.getUserImgURL()
+                    );
+                })
                 .collect(Collectors.toList());
     }
-
 
     @Override
     public UserDTO updateAllFormData(int userId, UserDTO userDTO, MultipartFile profileImage) {

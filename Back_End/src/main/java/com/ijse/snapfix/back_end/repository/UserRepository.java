@@ -1,5 +1,6 @@
 package com.ijse.snapfix.back_end.repository;
 
+import com.ijse.snapfix.back_end.entity.Role;
 import com.ijse.snapfix.back_end.entity.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -38,7 +39,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("SELECT u FROM User u WHERE u.userRole = 'TECHNICIAN' AND u.availability = true")
     List<User> findAvailableTechnicians();
 
-    List<User> findByUserRoleAndAvailability(String role, boolean availability);
+    List<User> findByUserRoleAndAvailability(Role userRole, boolean availability);
+    List<User> findByUserRole(Role userRole);
 
     Optional<User> findByUserName(String username); // for authentication
     Optional<User> findByUserEmail(String email); // for authentication
