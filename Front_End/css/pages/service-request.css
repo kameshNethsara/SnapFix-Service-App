@@ -23,7 +23,7 @@
 }
 
 body {
-    background-color: #f5f7fa;
+    background-color: #f0f5f0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: var(--dark);
     overflow-x: hidden;
@@ -32,19 +32,16 @@ body {
 
 /* ===== LAYOUT & STRUCTURE ===== */
 .main-content {
-    margin-left: 260px;
-    padding: 20px 30px;
-    transition: var(--transition);
-    min-height: 100vh;
+    margin-top: 70px;
+    padding: 20px;
 }
 
 @media (max-width: 992px) {
     .main-content {
-        margin-left: 0;
-        padding: 15px;
+        margin-top: 100px;
+        padding: 20px;
     }
 }
-
 /* ===== TYPOGRAPHY ===== */
 h1, h2, h4 {
     font-weight: 700;
@@ -245,3 +242,103 @@ h1 {
      color: #fff;
 }
 
+/* ===== Tablet (≤992px) ===== */
+@media (max-width: 992px) {
+    .main-content {
+        margin-left: 0 !important;
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.6rem;
+        text-align: center;
+    }
+
+    .card-body {
+        padding: 1.5rem !important;
+    }
+}
+
+/* ===== Mobile (≤768px) ===== */
+@media (max-width: 768px) {
+    /* Stack form inputs full width */
+    .row.g-3 > [class*="col-"] {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .d-flex.justify-content-between {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 10px;
+    }
+
+    /* Dropzone full width */
+    .dropzone {
+        padding: 1.2rem;
+        font-size: 0.9rem;
+    }
+
+    #descCount {
+        font-size: 0.8rem;
+    }
+
+    /* Estimate + submit buttons stack */
+    .d-flex.align-items-center.gap-2 {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .d-flex.align-items-center.gap-2 .btn {
+        width: 100%;
+    }
+}
+
+/* ===== Small phones (≤576px) ===== */
+@media (max-width: 576px) {
+    h1 {
+        font-size: 1.3rem;
+    }
+
+    .card {
+        border-radius: 0.75rem;
+    }
+
+    .preview-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+
+    /* DataTable horizontal scroll */
+    #requestsTable {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    #requestsTable thead {
+        font-size: 0.8rem;
+    }
+
+    #requestsTable td, 
+    #requestsTable th {
+        font-size: 0.8rem;
+        padding: 8px 10px;
+    }
+}
+
+/* ===== Extra small phones (≤360px) ===== */
+@media (max-width: 360px) {
+    h1 {
+        font-size: 1.1rem;
+    }
+
+    .dropzone {
+        font-size: 0.8rem;
+        padding: 1rem;
+    }
+
+    .preview-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
+}

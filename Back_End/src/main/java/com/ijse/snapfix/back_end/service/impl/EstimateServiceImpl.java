@@ -50,19 +50,31 @@ public class EstimateServiceImpl implements EstimateService {
         }
     }
 
+//    private String buildPrompt(EstimateRequestDTO request) {
+//        return "You are a professional service estimator in Sri Lanka. Provide an estimate for:\n" +
+//                "Title: " + request.getTitle() + "\n" +
+//                "Category: " + request.getCategory() + "\n" +
+//                "Description: " + request.getDescription() + "\n\n" +
+//                "Provide a JSON response with these fields:\n" +
+//                "- Price Range (in LKR, format: 'XXXX-XXXX LKR')\n" +
+//                "- Time Estimate (e.g., '2-3 hours', '1 day')\n" +
+//                "- Travel Cost (in LKR, if applicable)\n" +
+//                "- Notes (any additional considerations)\n\n" +
+//                "Response:";
+//    }
+
     private String buildPrompt(EstimateRequestDTO request) {
-        return "You are a professional service estimator in Sri Lanka. Provide an estimate for:\n" +
+        return "You are a professional service estimator in Sri Lanka. " +
+                "Provide ONLY a raw JSON object, no explanations, no markdown, no ```json tags. " +
+                "The JSON must include these fields exactly: " +
+                "price_range, time_estimate, travel_cost, notes.\n\n" +
+                "Here is the service request:\n" +
                 "Title: " + request.getTitle() + "\n" +
                 "Category: " + request.getCategory() + "\n" +
                 "Description: " + request.getDescription() + "\n\n" +
-                "Provide a JSON response with these fields:\n" +
-                "- price_range (in LKR, format: 'XXXX-XXXX LKR')\n" +
-                "- time_estimate (e.g., '2-3 hours', '1 day')\n" +
-                "- travel_cost (in LKR, if applicable)\n" +
-                "- notes (any additional considerations)\n\n" +
-                "Response:";
+                "Return only the JSON object.";
     }
-
+    
     private String tryOpenRouter(String prompt) {
         if (openRouterKey == null || openRouterKey.isEmpty()) {
             return "Error: No OpenRouter API key configured";

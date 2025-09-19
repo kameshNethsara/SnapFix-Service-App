@@ -561,48 +561,56 @@ $("#generateEstimateBtn").click(async () => {
         return Swal.fire("Info", "Please fill title, category, and description.", "info");
     }
 
-    $("#estimateResult").html('<div class="spinner-border spinner-border-sm" role="status"></div> Generating estimate...');
+    // Show the modal first
+    const estimateModal = new bootstrap.Modal(document.getElementById('estimateModal'));
+    $("#estimateModalBody").html(`
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2">Generating estimate...</p>
+        </div>
+    `);
+    estimateModal.show();
 
     try {
         const estimate = await generateEstimate(title, category, description);
-        $("#estimateResult").html(formatEstimate(estimate));
-        
+        $("#estimateModalBody").html(formatEstimate(estimate));
     } catch (error) {
-        $("#estimateResult").html('<span class="text-danger">Failed to generate estimate. Please try again.</span>');
+        $("#estimateModalBody").html('<span class="text-danger">Failed to generate estimate. Please try again.</span>');
     }
 });
 
 // Format the AI response
 function formatEstimate(estimateText) {
     try {
-        const data = JSON.parse(estimateText); // parse JSON
+        // Clean AI response: remove ```json, ``` and "json" prefixes
+        estimateText = estimateText
+            .replace(/```json/i, "")
+            .replace(/```/g, "")
+            .replace(/^\s*json\s*/i, "");
+
+        const data = JSON.parse(estimateText);
 
         return `
         <div class="estimate-card mt-3 p-3 bg-white rounded shadow-sm border">
-            <h5 class="mb-3 text-primary"><i class="fa-solid fa-file-invoice-dollar me-2"></i>Estimated Details</h5>
+            <h5 class="mb-3 text-primary">
+              <i class="fa-solid fa-file-invoice-dollar me-2"></i>Estimated Details
+            </h5>
             <div class="row g-2">
-                <div class="col-md-6">
-                    <div class="p-2 border rounded bg-light"><strong>Price Range:</strong> ${data.price_range || 'N/A'}</div>
-                </div>
-                <div class="col-md-6">
-                    <div class="p-2 border rounded bg-light"><strong>Time Estimate:</strong> ${data.time_estimate || 'N/A'}</div>
-                </div>
-                <div class="col-md-6">
-                    <div class="p-2 border rounded bg-light"><strong>Travel Cost:</strong> ${data.travel_cost || 'N/A'}</div>
-                </div>
-                ${data.notes ? `
-                <div class="col-12">
-                    <div class="p-2 border rounded bg-light"><strong>Notes:</strong> ${data.notes}</div>
-                </div>` : ''}
+                <div class="col-md-6"><div class="p-2 border rounded bg-light"><strong>Price Range:</strong> ${data.price_range || 'N/A'}</div></div>
+                <div class="col-md-6"><div class="p-2 border rounded bg-light"><strong>Time Estimate:</strong> ${data.time_estimate || 'N/A'}</div></div>
+                <div class="col-md-6"><div class="p-2 border rounded bg-light"><strong>Travel Cost:</strong> ${data.travel_cost || 'N/A'}</div></div>
+                ${data.notes ? `<div class="col-12"><div class="p-2 border rounded bg-light"><strong>Notes:</strong> ${data.notes}</div></div>` : ""}
             </div>
         </div>`;
     } catch (e) {
-        // fallback if AI returns plain text
         return `
         <div class="estimate-card mt-3 p-3 bg-white rounded shadow-sm border">
-            <h5 class="mb-2 text-primary"><i class="fa-solid fa-file-invoice-dollar me-2"></i>AI Estimate</h5>
+            <h5 class="mb-2 text-primary">
+              <i class="fa-solid fa-file-invoice-dollar me-2"></i>AI Estimate
+            </h5>
             <div>${estimateText.replace(/\n/g, '<br>')}</div>
         </div>`;
     }
 }
+
 
