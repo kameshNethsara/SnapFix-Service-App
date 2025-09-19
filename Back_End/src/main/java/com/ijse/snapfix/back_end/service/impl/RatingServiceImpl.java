@@ -1,10 +1,13 @@
 package com.ijse.snapfix.back_end.service.impl;
 
 import com.ijse.snapfix.back_end.dto.RatingDTO;
+import com.ijse.snapfix.back_end.dto.UserDTO;
 import com.ijse.snapfix.back_end.entity.Rating;
 import com.ijse.snapfix.back_end.entity.ServiceRequest;
+import com.ijse.snapfix.back_end.entity.User;
 import com.ijse.snapfix.back_end.repository.RatingRepository;
 import com.ijse.snapfix.back_end.repository.ServiceRequestRepository;
+import com.ijse.snapfix.back_end.repository.UserRepository;
 import com.ijse.snapfix.back_end.service.RatingService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,7 @@ public class RatingServiceImpl implements RatingService {
 
     private final RatingRepository ratingRepository;
     private final ServiceRequestRepository serviceRequestRepository;
+    private final UserRepository userRepository;
 
     @Override
     public RatingDTO saveRating(RatingDTO ratingDTO) {
@@ -89,6 +93,24 @@ public class RatingServiceImpl implements RatingService {
         Optional<Rating> opt = ratingRepository.findByServiceRequest_RequestId(serviceRequestId);
         return opt.map(this::mapToDTO).orElse(null);
     }
+
+//    public List<UserDTO> getAllTechniciansWithRatings() {
+//        List<User> technicians = userRepository.findByRole("TECHNICIAN");
+//        return technicians.stream().map(user -> {
+//            Double avgRating = ratingRepository.findAverageRatingByTechnicianId(user.getUserId());
+//            return UserDTO.builder()
+//                    .userId(user.getUserId())
+//                    .userFullName(user.getUserFullName())
+//                    .rating(avgRating != null ? avgRating : 0)
+//                    .userMobile(user.getUserMobile())
+//                    .userEmail(user.getUserEmail())
+//                    .availability(user.getAvailability())
+//                    .userImgURL(user.getUserImgURL())
+//                    .city(user.getCity())
+//                    .userInfo(user.getUserInfo())
+//                    .build();
+//        }).collect(Collectors.toList());
+//    }
 
     private RatingDTO mapToDTO(Rating rating) {
         Long srId = rating.getServiceRequest() != null ? rating.getServiceRequest().getRequestId() : null;

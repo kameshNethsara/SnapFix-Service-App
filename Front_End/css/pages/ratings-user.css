@@ -23,7 +23,7 @@
 }
 
 body {
-    background-color: #f5f7fa;
+    background-color: #f0f5f0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: var(--dark);
     overflow-x: hidden;
@@ -32,19 +32,16 @@ body {
 
 /* ===== LAYOUT & STRUCTURE ===== */
 .main-content {
-    margin-left: 260px;
-    padding: 20px 30px;
-    transition: var(--transition);
-    min-height: 100vh;
+    margin-top: 70px;
+    padding: 20px;
 }
 
 @media (max-width: 992px) {
     .main-content {
-        margin-left: 0;
-        padding: 15px;
+        margin-top: 100px;
+        padding: 20px;
     }
 }
-
 /* ===== TYPOGRAPHY ===== */
 h1, h2, h4 {
     font-weight: 700;
@@ -182,4 +179,85 @@ textarea {
 
 .breadcrumb-item a:hover {
     text-decoration: underline;
+}
+/* ===== Tablet (≤992px) ===== */
+@media (max-width: 992px) {
+  .main-content {
+    margin-left: 0 !important;
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+    text-align: center;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+}
+
+/* ===== Mobile (≤768px) ===== */
+@media (max-width: 768px) {
+  .page-header {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .tech-avatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .star {
+    font-size: 26px;
+  }
+
+  #starRow {
+    flex-wrap: wrap; /* stars wrap on smaller screens */
+    justify-content: center;
+  }
+
+  #ratingLabel {
+    display: block;
+    margin-top: 6px;
+    text-align: center;
+  }
+
+  textarea {
+    min-height: 100px;
+  }
+
+  .btn {
+    flex: 1; /* buttons expand evenly */
+    font-size: 0.9rem;
+  }
+
+  .d-flex.gap-2 {
+    flex-direction: column; /* stack buttons */
+  }
+}
+
+/* ===== Small Phones (≤480px) ===== */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.3rem;
+  }
+
+  .tech-avatar {
+    width: 50px;
+    height: 50px;
+  }
+
+  .star {
+    font-size: 22px;
+  }
+
+  .reviews-container {
+    max-height: 300px;
+  }
+
+  #comment {
+    font-size: 0.9rem;
+  }
 }
