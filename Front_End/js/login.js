@@ -2,6 +2,14 @@ $(document).ready(async function () {
 
     let existingUserCount = 0; // store the user count globally
 
+    // Auto-switch to Sign Up if ?signup=true is in the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("signup") === "true") {
+        setTimeout(() => {
+            toggle(); // show sign-up form instead of login
+        }, 100);
+    }
+
     // 🔹 Check if there are any users in DB on page load
     try {
         const res = await fetch("http://localhost:8080/snapfixauth/checkUsers");
@@ -157,13 +165,15 @@ $(document).ready(async function () {
 
 
           Swal.fire("Login Successful!", "Welcome " + username + "!", "success").then(() => {
-            // if (role && role.toUpperCase() === "ADMIN") {
-            //     window.location.href = "/Front_End/html/pages/admin-dashboard.html";
-            // } else {
-            //     window.location.href = "/Front_End/html/pages/dashboard.html";
-            // }
-            addActivity("User Logged In", "Login", `User ${username} with role ${role} logged in.`);
-            window.location.href = "/Front_End/html/pages/dashboard.html";
+              if (role && role.toUpperCase() === "ADMIN") {
+                addActivity("Admin Logged In", "Login", `Admin ${username} logged in.`);
+                window.location.href = "/Front_End/html/pages/admin-dashboard.html";
+              } else {
+                addActivity("User Logged In", "Login", `User ${username} with role ${role} logged in.`);
+                window.location.href = "/Front_End/html/pages/user-dashboard.html";
+            }
+            // addActivity("User Logged In", "Login", `User ${username} with role ${role} logged in.`);
+            // window.location.href = "/Front_End/html/pages/dashboard.html";
         });
       } catch (error) {
           Swal.fire("Login Failed!", error.message || "Invalid credentials", "error");
