@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapFix | Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/Front_End/css/pages/sidebar.css">
+    <link rel="stylesheet" href="/Front_End/css/pages/topbar.css">
+    <link rel="stylesheet" href="/Front_End/css/pages/dashboard.css">
+</head>
+<body>
+    <!-- Sidebar placeholder -->
+    <!-- <div id="sidebar"></div> -->
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div id="topbar"></div>
+
+        <!-- Dashboard Content -->
+        <div class="container-fluid py-4">
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h2 fw-bold text-primary">Dashboard Overview</h1>
+                    <p class="text-muted mb-0">Welcome back, <span id="dashboardUserName">Admin</span>! Here's what's happening today.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary">
+                        <i class="fas fa-download me-2"></i>Export Report
+                    </button>
+                    <button class="btn btn-primary" id="newUserBtn">
+                        <i class="fas fa-plus me-2"></i>New User
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="row g-4 mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="stat-label">TOTAL REQUESTS</h6>
+                                <h3 class="stat-value" id="totalRequests">0</h3>
+                                <div class="trend">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span>12% from last week</span>
+                                </div>
+                            </div>
+                            <div class="stat-icon">
+                                <i class="fas fa-clipboard-list"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="stat-label">ACTIVE TECHNICIANS</h6>
+                                <h3 class="stat-value" id="activeTechnicians">0</h3>
+                                <div class="trend">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span>3 new available</span>
+                                </div>
+                            </div>
+                            <div class="stat-icon" style="background-color: rgba(33, 150, 243, 0.1); color: #2196F3;">
+                                <i class="fas fa-user-cog"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="stat-label">COMPLETED JOBS</h6>
+                                <h3 class="stat-value" id="completedJobs">0</h3>
+                                <div class="trend">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span>8% from yesterday</span>
+                                </div>
+                            </div>
+                            <div class="stat-icon" style="background-color: rgba(76, 175, 80, 0.1); color: #4CAF50;">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="stat-label">PENDING REQUESTS</h6>
+                                <h3 class="stat-value" id="pendingRequests">0</h3>
+                                <div class="trend">
+                                    <i class="fas fa-arrow-down"></i>
+                                    <span>4% from yesterday</span>
+                                </div>
+                            </div>
+                            <div class="stat-icon" style="background-color: rgba(255, 152, 0, 0.1); color: #FF9800;">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts and Activity Section -->
+            <div class="row g-4 mb-4">
+                <!-- Requests Chart -->
+                <div class="col-xl-8">
+                    <div class="card h-100">
+                        <div class="card-header bg-white border-0 pb-0">
+                            <h5 class="card-title mb-0">Service Requests Overview</h5>
+                            <p class="text-muted small">Last 30 days performance</p>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="requestsChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Activity -->
+                <div class="col-xl-4">
+                    <div class="card h-100">
+                        <div class="card-header bg-white border-0 pb-0 d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Recent Activity</h5>
+                            <a href="/Front_End/html/pages/user-profile.html#activity" class="btn btn-sm btn-link">View All</a>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="list-group list-group-flush" id="recentActivityList">
+                                <!-- Activity items will be loaded here -->
+                                <div class="text-center py-4">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Requests and Technicians -->
+            <div class="row g-4">
+                <!-- Recent Service Requests -->
+                <div class="col-xl-8">
+                    <div class="card">
+                        <div class="card-header bg-white border-0 pb-0 d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Recent Service Requests</h5>
+                            <a href="/Front_End/html/pages/services.html" class="btn btn-sm btn-link">View All</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle" id="recentRequestsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Title</th>
+                                            <th>Customer</th>
+                                            <th>Technician</th>
+                                            <th>Status</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Data will be populated by JavaScript -->
+                                        <tr>
+                                            <td colspan="6" class="text-center py-4">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Top Technicians -->
+                <div class="col-xl-4">
+                    <div class="card h-100">
+                        <div class="card-header bg-white border-0 pb-0 d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Top Rated Technicians</h5>
+                            <a href="/Front_End/html/pages/technicians.html" class="btn btn-sm btn-link">View</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group list-group-flush" id="topTechniciansList">
+                                <!-- Technicians will be loaded here -->
+                                <div class="text-center py-4">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery and other scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/Front_End/js/pages/sidebar.js"></script>
+    <script src="/Front_End/js/pages/topbar.js"></script>
+    <script src="/Front_End/js/pages/activity.js"></script>
+    <script src="/Front_End/js/pages/dashboard.js"></script>
+    <script src="/Front_End/js/pages/admin-dashboard.js"></script>
+</body>
+</html>
