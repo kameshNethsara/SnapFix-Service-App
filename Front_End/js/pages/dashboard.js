@@ -1,5 +1,19 @@
 console.log("Script loaded");
 
+$(document).ready(function () {
+
+    // Authentication check
+    if (!localStorage.getItem("jwtToken") || !localStorage.getItem("userId")) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Authentication Required',
+            text: 'Please log in to rate technicians',
+            willClose: () => window.location.href = '/Front_End/html/login.html'
+        });
+        return;
+    }
+});
+
 window.addEventListener('DOMContentLoaded', () => {
     const role = localStorage.getItem('role'); // store user role at login
     console.log('User role:', role);

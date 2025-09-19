@@ -24,9 +24,7 @@
 
         /* Main content */
         .main-content {
-            margin-left: 260px;
-            padding: 20px;
-            transition: var(--transition);
+            margin-top: 70px;
         }
 
         /* Top bar */
@@ -321,3 +319,171 @@
                 padding: 10px 15px;
             }
         }
+
+        /* Container adjustments */
+        #recentActivityList {
+            max-height: 400px; /* adjust height as needed */
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        /* Activity item */
+        #recentActivityList .list-group-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa; /* light background */
+            border: none;
+        }
+
+        /* Hover effect */
+        #recentActivityList .list-group-item:hover {
+            background-color: #e9ecef;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+        }
+
+        /* Icon on left */
+        #recentActivityList .list-group-item i {
+            font-size: 1.4rem;
+            margin-right: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        /* Activity text */
+        #recentActivityList .list-group-item div {
+            flex-grow: 1;
+        }
+
+        #recentActivityList .fw-bold {
+            font-size: 1rem;
+            color: #343a40;
+        }
+
+        #recentActivityList small {
+            display: block;
+            color: #6c757d;
+            margin-top: 0.2rem;
+        }
+
+        /* Badge style */
+        #recentActivityList .badge {
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.35em 0.6em;
+            border-radius: 8px;
+            text-transform: uppercase;
+        }
+
+        /* Scrollbar for modern look */
+        #recentActivityList::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #recentActivityList::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        #recentActivityList::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+        }
+
+        #recentActivityList::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(0, 0, 0, 0.35);
+        }
+
+        /* ===== General Fixes ===== */
+
+
+/* Sidebar collapses on smaller screens */
+@media (max-width: 992px) {
+  .main-content {
+    margin-left: 80px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    padding: 15px;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -260px;
+    width: 260px;
+    height: 100%;
+    background: #fff;
+    transition: left 0.3s ease;
+    z-index: 1050;
+  }
+
+  .sidebar.show {
+    left: 0;
+  }
+}
+
+/* ===== Topbar ===== */
+@media (max-width: 768px) {
+  .topbar {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .logout-btn {
+    align-self: flex-end;
+  }
+}
+
+/* ===== Stat Cards ===== */
+.stat-card {
+  padding: 15px;
+}
+
+.stat-value {
+  font-size: 20px;
+}
+
+.stat-label {
+  font-size: 13px;
+}
+
+/* On small screens stack stat cards */
+@media (max-width: 576px) {
+  .stat-card {
+    text-align: center;
+  }
+  .stat-card .d-flex {
+    flex-direction: column;
+    align-items: center;
+  }
+  .stat-icon {
+    margin-bottom: 10px;
+  }
+}
+
+/* ===== Tables ===== */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table th, .table td {
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+/* ===== Charts ===== */
+@media (max-width: 768px) {
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+
