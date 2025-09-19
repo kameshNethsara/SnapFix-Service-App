@@ -520,3 +520,25 @@ function updateRoleCounts(table) {
     $("#techCount").text(techCount);
     $("#userCount").text(userCount);
 }
+
+// function makeTableResponsive() {
+//   let table = $('#usersTable').DataTable(); // Get DataTable instance
+
+//   $('#usersTable tbody tr').each(function () {
+//     $(this).find('td').each(function (i) {
+//       // Get header text using DataTables API
+//       let heading = table.column(i).header().innerText;
+//       $(this).attr('data-label', heading);
+//     });
+//   });
+// }
+
+// // Run once after init
+// $('#usersTable').on('init.dt', function () {
+//   makeTableResponsive();
+// });
+
+// // Run again after every redraw (pagination, search, sort)
+// $('#usersTable').on('draw.dt', function () {
+//   makeTableResponsive();
+// });

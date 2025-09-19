@@ -23,7 +23,7 @@
 }
 
 body {
-    background-color: #f5f7fa;
+     background-color: #f0f5f0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: var(--dark);
     overflow-x: hidden;
@@ -32,16 +32,14 @@ body {
 
 /* ===== LAYOUT & STRUCTURE ===== */
 .main-content {
-    margin-left: 260px;
-    padding: 20px 30px;
-    transition: var(--transition);
-    min-height: 100vh;
+    margin-top: 70px;
+    padding: 20px;
 }
 
 @media (max-width: 992px) {
     .main-content {
-        margin-left: 0;
-        padding: 15px;
+        margin-top: 100px;
+        padding: 20px;
     }
 }
 
@@ -544,5 +542,21 @@ h1 {
     .preview-img {
         width: 100px;
         height: 100px;
+    }
+}
+@media (max-width: 480px) {
+    .table tr {
+        margin-bottom: 1rem;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .table td {
+        padding: 10px;
+        font-size: 0.85rem;
+    }
+
+    .status-badge {
+        font-size: 0.75rem;
+        padding: 3px 8px;
     }
 }
