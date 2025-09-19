@@ -17,6 +17,16 @@ $(document).ready(function () {
         return window.location.href = "/Front_End/html/login.html";
     }
 
+    // trigger nav-link
+    const hash = window.location.hash;
+    if (hash) {
+        const tabTrigger = document.querySelector(`.nav-link[href="${hash}"]`);
+        if (tabTrigger) {
+            const tab = new bootstrap.Tab(tabTrigger);
+            tab.show();
+        }
+    }
+
     //user info character count
     $('#editUserInfo').on('input', function() {
       let length = $(this).val().length;
