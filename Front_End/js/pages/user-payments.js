@@ -181,10 +181,10 @@ $(document).ready(function () {
                             "Content-Type": "application/json",
                             "Authorization": `Bearer ${token}`
                         },
-                        body: JSON.stringify({ 
+                        body: JSON.stringify({
                             amount: amountValue, 
                             method: newMethod, 
-                            currency: "lkr" 
+                            currency: "lkr"
                         })
                     });
 
@@ -234,16 +234,57 @@ $(document).ready(function () {
                                 confirmButtonColor: "#d33"
                             });
                         } else if (paymentIntent && paymentIntent.status === "succeeded") {
+
+                             await fetch(`${API_BASE}/snapfix/payments/${requestId}/mark-paid`, {
+                                method: "PATCH",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "Authorization": `Bearer ${token}`
+                                },
+                                body: JSON.stringify({ status: "PAID" })
+                             });
+                            
+                            //Fetch the updated payment from backend
+                            const updatedRes = await fetch(`${API_BASE}${PAY_ENDPOINT}`, {
+                                headers: { Authorization: `Bearer ${token}` }
+                            });
+                            const payments = await updatedRes.json();
+                            const updatedPayment = payments
+                                .map(normalizePayment)
+                                .find(p => p.requestId === requestId);
+                            
                             Swal.fire({
                                 icon: "success",
                                 title: "Payment Successful 🎉",
-                                text: "Your payment has been processed successfully!",
-                                confirmButtonColor: "#3085d6"
+                                text: "Your payment has been processed successfully!"
                             }).then(() => {
-                                // Optional: update your table or refresh the page here
                                 securePaymentModal.hide();
+
+                                // 🔹 Update DataTable
+                                const userPayment = stripeData.userPayment; // response from backend
+                                addActivity(
+                                    "Payment Successful",       // action
+                                    "update",                   // type (badge color)
+                                    `Payment for Request #${userPayment.requestId} updated to ${userPayment.method}. Amount: LKR ${userPayment.amount}` // description
+                                );
+                                const rowIndex = $paymentsTable.rows().eq(0).filter(idx =>
+                                    $paymentsTable.row(idx).data().requestId === userPayment.requestId
+                                );
+
+                                if (rowIndex.length) {
+                                    $paymentsTable.row(rowIndex[0]).data(userPayment).draw(false);
+                                } else {
+                                    $paymentsTable.row.add(userPayment).draw(false);
+                                }
+
+                                const $card = $(`.save-method[data-id='${userPayment.requestId}']`).closest(".card");
+                                $card.find(".status-badge")
+                                    .removeClass("status-pending status-paid")
+                                    .addClass("status-paid")
+                                    .text("Paid");
+                                $card.find(".save-method").prop("disabled", true).text("Payment Completed");
                             });
-                        } else {
+                        }else {
                             Swal.fire({
                                 icon: "info",
                                 title: "Payment Pending",
@@ -272,6 +313,19 @@ $(document).ready(function () {
                     if (!res.ok) throw new Error(`Failed to update method: ${res.status}`);
 
                     const updatedPayment = normalizePayment(await res.json());
+
+                    // 🔹 Add user & technician info from card
+                    updatedPayment.userName = $card.find(".info-value").eq(0).text();
+                    updatedPayment.technicianName = $card.find(".info-value").eq(1).text();
+
+                    updatedPayment.paymentDate = new Date().toLocaleString();
+
+                    addActivity(
+                        "Payment Successful", // action
+                        "update",          // type (badge color)
+                        `Payment for Request #${updatedPayment.requestId} updated to ${newMethod}. Amount: LKR ${updatedPayment.amount}` // description
+                    );
+
                     Swal.fire("Success", "Payment updated!", "success");
 
                     // Update card UI
@@ -293,6 +347,7 @@ $(document).ready(function () {
                     } else {
                         $paymentsTable.row.add(updatedPayment).draw(false);
                     }
+
                 }
 
             } catch (err) {

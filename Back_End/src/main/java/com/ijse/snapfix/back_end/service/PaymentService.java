@@ -22,4 +22,6 @@ public interface PaymentService {
 
     PaymentDTO getPaymentByServiceRequestId(Long serviceRequestId);
 
+    public Payment updateStatus(Long requestId, String status);
+
 }

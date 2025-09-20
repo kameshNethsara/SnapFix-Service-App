@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -162,6 +163,17 @@ public class PaymentServiceImpl implements PaymentService {
                 payment.getMethod(),
                 payment.getStatus()
         );
+    }
+
+    @Override
+    public Payment updateStatus(Long requestId, String status) {
+        Payment payment = paymentRepository.findByServiceRequestId(requestId);
+        if (payment == null) {
+            throw new RuntimeException("Payment not found");
+        }
+        payment.setStatus(status);  // PAID
+        payment.setPaymentDate(LocalDate.now());  // LocalDate instead of LocalDateTime
+        return paymentRepository.save(payment);
     }
 
 }

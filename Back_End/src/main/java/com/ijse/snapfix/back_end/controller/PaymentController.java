@@ -86,6 +86,39 @@ public class PaymentController {
     }
 
     // Create a Stripe payment for a service request
+//    @PostMapping("/service/{serviceRequestId}/stripe")
+//    public ResponseEntity<?> createStripePayment(
+//            @PathVariable Long serviceRequestId,
+//            @RequestBody Map<String, String> body
+//    ) {
+//        String currency = body.get("currency");
+//        String paymentMethod = body.get("method");
+//        BigDecimal amount = new BigDecimal(body.get("amount"));
+//
+//        if (paymentMethod == null || paymentMethod.isEmpty()) {
+//            return ResponseEntity.badRequest().build();
+//        }
+//
+//        try {
+//            // Create PaymentIntent with Stripe
+//            PaymentIntent paymentIntent = stripeService.createPayment(amount, currency);
+//
+//            // Update payment record in database
+//            Payment payment = paymentService.stripePaymentHandle(
+//                    new PaymentDTO(serviceRequestId, amount.doubleValue(), "", null, paymentMethod, "PENDING")
+//            );
+//
+//            // Return the client secret to frontend
+//            Map<String, String> response = new HashMap<>();
+//            response.put("clientSecret", paymentIntent.getClientSecret());
+//            response.put("paymentId", payment.getPaymentId().toString());
+//
+//            return ResponseEntity.ok(response);
+//        } catch (StripeException e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(500).body("Stripe error: " + e.getMessage());
+//        }
+//    }
     @PostMapping("/service/{serviceRequestId}/stripe")
     public ResponseEntity<?> createStripePayment(
             @PathVariable Long serviceRequestId,
@@ -100,18 +133,22 @@ public class PaymentController {
         }
 
         try {
-            // Create PaymentIntent with Stripe
             PaymentIntent paymentIntent = stripeService.createPayment(amount, currency);
 
-            // Update payment record in database
             Payment payment = paymentService.stripePaymentHandle(
                     new PaymentDTO(serviceRequestId, amount.doubleValue(), "", null, paymentMethod, "PENDING")
             );
 
-            // Return the client secret to frontend
-            Map<String, String> response = new HashMap<>();
+            // 🔹 Fetch full user payment info
+            UserPaymentDTO userPayment = paymentService.getAllUserPayments().stream()
+                    .filter(up -> up.getRequestId().equals(serviceRequestId))
+                    .findFirst()
+                    .orElse(null);
+
+            Map<String, Object> response = new HashMap<>();
             response.put("clientSecret", paymentIntent.getClientSecret());
-            response.put("paymentId", payment.getPaymentId().toString());
+            response.put("paymentId", payment.getPaymentId());
+            response.put("userPayment", userPayment);
 
             return ResponseEntity.ok(response);
         } catch (StripeException e) {
@@ -119,4 +156,17 @@ public class PaymentController {
             return ResponseEntity.status(500).body("Stripe error: " + e.getMessage());
         }
     }
+
+    @PatchMapping("/{requestId}/mark-paid")
+    public ResponseEntity<?> markPaymentPaid(@PathVariable Long requestId, @RequestBody Map<String,String> body) {
+        String status = body.get("status");
+        if(!"PAID".equals(status)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Payment updatedPayment = paymentService.updateStatus(requestId, "PAID"); // Update DB
+        return ResponseEntity.ok(updatedPayment);
+    }
+
+
 }
