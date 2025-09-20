@@ -3,10 +3,10 @@
 ## Project Description
 SnapFix is a comprehensive service management platform that connects customers with qualified technicians for maintenance and repair needs. The platform streamlines the entire service process from request creation to completion, featuring:
 
-- Real-time technician tracking  
-- Smart scheduling  
-- AI-powered service estimation  
-- Secure payment processing  
+* Real-time technician tracking  
+* Smart scheduling  
+* AI-powered service estimation  
+* Secure payment processing  
 
 ### User Roles
 SnapFix serves three primary user roles:
@@ -51,9 +51,9 @@ Administrative interface for user management and system oversight.
 ## Setup Instructions
 
 ### Prerequisites
-- Node.js v14 or higher  
-- Java JDK v11 or higher  
-- Maven v3.6 or higher  
+* Node.js v14 or higher  
+* Java JDK v11 or higher  
+* Maven v3.6 or higher  
 
 ---
 
