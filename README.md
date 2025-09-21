@@ -117,7 +117,7 @@ npx http-server -p 8000
 ### YouTube Video
 
 Watch a full demonstration of SnapFix features:
-[![Watch the Demo](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=VIDEO_ID)
+[![Watch the Demo](/Front_End/assets/screenshots/landing-page1.png)](https://youtu.be/xF9xk0aut0Q)
 
 © 2025 SnapFix | Professional Service Management Platform
 
